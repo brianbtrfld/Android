@@ -1,5 +1,6 @@
 package com.innovsys.training.yambaclass;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,8 @@ public class TimelineFragment extends ListFragment implements ViewBinder, Loader
 {
     private TimelineReceiver m_receiver;
     private IntentFilter m_filter;
+    
+    private NotificationManager m_notificationManager;
     
     //private Cursor m_cursor;   REMOVED when Loader was implemented, LOADER owns the cursor.
     private SimpleCursorAdapter m_adapter;
@@ -94,6 +97,8 @@ public class TimelineFragment extends ListFragment implements ViewBinder, Loader
         m_receiver = new TimelineReceiver();
         //Establishes the IntentFilter used to register the broadcast receiver.
         m_filter = new IntentFilter(YambaApplication.ACTION_NEW_STATUS);
+        
+        m_notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     @Override
@@ -142,6 +147,9 @@ public class TimelineFragment extends ListFragment implements ViewBinder, Loader
         
         //Register the receiver.
         getActivity().registerReceiver(m_receiver, m_filter, YambaApplication.PERM_NEW_STATUS, null);
+        
+        m_notificationManager.cancel(YambaApplication.NEW_STATUS_NOTIFICATION);
+        
         
     }
 
@@ -235,6 +243,9 @@ public class TimelineFragment extends ListFragment implements ViewBinder, Loader
         public void onReceive(Context context, Intent intent) 
         {
             getLoaderManager().restartLoader(0, null, TimelineFragment.this);
+            
+            m_notificationManager.cancel(YambaApplication.NEW_STATUS_NOTIFICATION);
+            
         }
         
     }
