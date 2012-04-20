@@ -132,6 +132,8 @@ public class UpdaterService extends IntentService
         Intent broadcastIntent = new Intent(YambaApplication.ACTION_NEW_STATUS);
         broadcastIntent.putExtra(YambaApplication.EXTRA_NEW_STATUS_COUNT, count);
         sendBroadcast(broadcastIntent, YambaApplication.PERM_NEW_STATUS);
+        
+        //testing git commit.
     }
 
 }
