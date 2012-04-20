@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, YambaClassActivity!</string>
+    <string name="app_name">YambaClass</string>
+    <string name="titleStatusUpdate">Status Update</string>
+    <string name="buttonUpdateText">Update</string>
+    <string name="editTextHint">Please enter a status update of 140 characters or less</string>
+    <string name="postSuccess">Post SUCCEEDED</string>
+    <string name="postFailed">Post FAILED</string>
+    <string name="letterCount">140</string>
+    <string name="prefsUsernameKey">prefsUsernameKey</string>
+    <string name="prefsUsernameTitle">Username</string>
+    <string name="prefsPasswordKey">prefsPasswordKey</string>
+    <string name="prefsPasswordTitle">Password</string>
+    <string name="prefsSiteURLKey">prefsSiteURLKey</string>
+    <string name="prefsSiteURLTitle">Site URL</string>
+    <string name="prefsSiteURLSummary">Enter the site URL</string>
+    <string name="menuPrefsTitle">Settings</string>
+    <string name="menuPrefsTitleCond">Settings</string>
+    <string name="menuRefreshTitle">Refresh</string>
+    <string name="menuRefreshTitleCond">Refresh</string>
+    <string name="menuTimelineTitle">View Timeline</string>
+    <string name="menuTimelineTitleCond">Timeline</string>
+    <string name="menuComposeTitle">Compose Message</string>
+    <string name="menuComposeTitleCond">Compose</string>
+    <string name="permNewStatusLabel">Receive new Yamba Class status message</string>
+    <string name="permNewStatusDescription">Receive new status notifications from inside the Yamba Class example</string>
+
+</resources>
