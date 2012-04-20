@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, StatusActivity!</string>
+    <string name="app_name">Yamba</string>
+    <string name="titleStatus">Status Update</string>
+    <string name="buttonUpdate">Update</string>
+    <string name="hintText">Please enter your 140-character status</string>
+    <string name="letterCountText">000</string>
+    <string name="titleUsername">Username</string>
+    <string name="summaryUsername">Please enter your Twitter username</string>
+    <string name="titlePassword">Password</string>
+    <string name="summaryPassword">Please enter your Twitter password</string>
+    <string name="titleAPIRoot">API Root</string>
+    <string name="summaryAPIRoot">URL of Root API for your service</string>
+    <string name="titlePrefs">Preferences</string>
+
+</resources>
