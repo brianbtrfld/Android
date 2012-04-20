@@ -32,6 +32,7 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 	Button updateButton;
 	Twitter twitter;
 
+	//testing github
 	
 	SharedPreferences prefs;
 	
