@@ -63,6 +63,7 @@ public final class R {
         public static final int menuRefreshTitleCond=0x7f060012;
         public static final int menuTimelineTitle=0x7f060013;
         public static final int menuTimelineTitleCond=0x7f060014;
+        public static final int notifyMessage=0x7f060019;
         public static final int permNewStatusDescription=0x7f060018;
         public static final int permNewStatusLabel=0x7f060017;
         public static final int postFailed=0x7f060006;

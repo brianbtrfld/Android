@@ -6,7 +6,11 @@ import java.util.List;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -93,11 +97,36 @@ public class UpdaterService extends IntentService
             Log.w(TAG, "Failed to retrieve timeline data");
         }
         
-        if (count > 0) {
+        if (count > 0) 
+        {
+            pushNotification();
             notifyNewStatus(count);
         }
     }
     
+    private void pushNotification() 
+    {
+        
+        int icon = android.R.drawable.stat_notify_chat;
+        CharSequence tickerText = getString(R.string.notifyMessage);
+        long when = System.currentTimeMillis();
+        
+        Notification notification = new Notification(icon, tickerText, when);
+        
+        CharSequence contentTitle = "Content Title";
+        CharSequence contentText = "Content Text";
+        
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        
+        notification.setLatestEventInfo(this, contentTitle, contentText, pi);
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(YambaApplication.NEW_STATUS_NOTIFICATION, notification);
+        
+    }
+
     private void notifyNewStatus(int count)
     {
         Intent broadcastIntent = new Intent(YambaApplication.ACTION_NEW_STATUS);

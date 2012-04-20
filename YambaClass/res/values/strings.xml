@@ -26,5 +26,6 @@
     <string name="menuComposeTitleCond">Compose</string>
     <string name="permNewStatusLabel">Receive new Yamba Class status message</string>
     <string name="permNewStatusDescription">Receive new status notifications from inside the Yamba Class example</string>
+    <string name="notifyMessage">New Yamba Message</string>
 
 </resources>

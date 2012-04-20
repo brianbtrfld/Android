@@ -27,7 +27,7 @@ public class BootReceiver extends BroadcastReceiver
         PendingIntent pendingIntent = PendingIntent.getService(context, 1, startUpdaterService, PendingIntent.FLAG_UPDATE_CURRENT);
         
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 10, 15000, pendingIntent);
+        am.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 10, 60000, pendingIntent);
         
         
     }
