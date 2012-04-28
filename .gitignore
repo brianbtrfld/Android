@@ -23,10 +23,11 @@
 
 # Generated code #
 ##################
+# edited from */*/obj/*
 gen/
 bin/
-*/*/obj/*
-*/*/libs/*
+obj/
+libs/
 
 # Logs and databases #
 ######################
