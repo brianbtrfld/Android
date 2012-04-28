@@ -23,8 +23,8 @@
 
 # Generated code #
 ##################
-*/*/gen/*
-*/*/bin/*
+gen/
+bin/
 */*/obj/*
 */*/libs/*
 
@@ -43,7 +43,7 @@ Thumbs.db
 
 # Eclipse Artifacts #
 #####################
-*/.metadata/*
+.metadata/
 
 # Samples #
 ##########
