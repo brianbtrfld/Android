@@ -23,10 +23,11 @@
 
 # Generated code #
 ##################
-*/*/gen/*
-*/*/bin/*
-*/*/obj/*
-*/*/libs/*
+# edited from */*/obj/*
+gen/
+bin/
+obj/
+libs/
 
 # Logs and databases #
 ######################
@@ -43,7 +44,7 @@ Thumbs.db
 
 # Eclipse Artifacts #
 #####################
-*/.metadata/*
+.metadata/
 
 # Samples #
 ##########
