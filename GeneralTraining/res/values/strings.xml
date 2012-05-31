@@ -2,9 +2,11 @@
 <resources>
 
     <string name="hello">Hello World, BitwiseOpsActivity!</string>
-    <string name="app_name">BitwiseOps</string>
+    <string name="app_name">General Training</string>
     <string name="stringInfo">Info</string>
     <string name="stringWarning">Warning</string>
     <string name="stringError">Error</string>
+    <string name="activityLabel_BitwiseOps">Bitwise Ops</string>
+    <string name="buttonBitwiseOps">Bitwise Operations</string>
 
 </resources>

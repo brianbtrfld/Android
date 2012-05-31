@@ -26,8 +26,8 @@ public class BitwiseOpsActivity extends Activity implements OnClickListener
     	
     	
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
+        setContentView(R.layout.bitwiseops);
+
         chkBoxInfo = (CheckBox)findViewById(R.id.chkBoxInfo);
         chkBoxWarning = (CheckBox)findViewById(R.id.chkBoxWarning);
         chkBoxError = (CheckBox)findViewById(R.id.chkBoxError);
