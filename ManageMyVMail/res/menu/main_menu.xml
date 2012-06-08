@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menuMessages" android:title="@string/menuMessages" android:titleCondensed="@string/menuMessagesCond" android:showAsAction="ifRoom|withText" android:icon="@android:drawable/sym_action_email"></item>
+    <item android:id="@+id/menuSettings" android:icon="@android:drawable/ic_menu_preferences" android:title="@string/menuSettings" android:titleCondensed="@string/menuSettingsCond" android:showAsAction="ifRoom|withText"></item>
+    
+
+</menu>

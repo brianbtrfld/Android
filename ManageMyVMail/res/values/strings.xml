@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ManageMyVMail</string>
+    <string name="labelURL">URL</string>
+    <string name="labelUsername">Username</string>
+    <string name="labelPassword">Password</string>
+    <string name="labelPIN">PIN</string>
+    <string name="buttonSignIn">Sign In</string>
+    <string name="textViewPhone">Phone</string>
+    <string name="textViewDate">Date</string>
+    <string name="textViewMessageText">Message Text</string>
+    <string name="menuMessages">Message List</string>
+    <string name="menuMessagesCond">Messages</string>
+    <string name="menuSettings">Settings</string>
+    <string name="menuSettingsCond">Settings</string>
+
+</resources>
