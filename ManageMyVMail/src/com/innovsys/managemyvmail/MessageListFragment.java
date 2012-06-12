@@ -1,6 +1,6 @@
 package com.innovsys.managemyvmail;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import android.widget.TextView;
 public class MessageListFragment extends ListFragment implements ViewBinder
 {
 
+	private OnMessageSelectedListener m_listener;
+	
 	private static final String[] columnNames = { TestMessageGenerator.KEY_PHONE, TestMessageGenerator.KEY_MESSAGE_DATE, TestMessageGenerator.KEY_MESSAGE_TEXT };
 	private static final int[] valueMap = { R.id.textViewPhone, R.id.textViewDate, R.id.textViewMessageText };
 	private Cursor m_cursor;
@@ -72,6 +74,21 @@ public class MessageListFragment extends ListFragment implements ViewBinder
 		m_cursor.close();
 	}
 
+	@Override
+	public void onAttach(Activity activity)
+	{
+		super.onAttach(activity);
+		
+		try
+		{
+			m_listener = (OnMessageSelectedListener)activity;
+		} 
+		catch (ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString());
+		}
+	}
+
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex)
 	{
 		int id = view.getId();
@@ -85,7 +102,7 @@ public class MessageListFragment extends ListFragment implements ViewBinder
 				// provides string ex. 1 hour ago, 3 mins ago, etc.
 				CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(timestamp);
 				((TextView) view).setText(relativeTime);
-				
+
 				return true;
 	
 			default:
@@ -96,10 +113,18 @@ public class MessageListFragment extends ListFragment implements ViewBinder
 
 	@Override
 	public void onListItemClick(ListView l, View view, int position, long id)
-	{
-		Intent intent = new Intent(view.getContext(), MessageDetailActivity.class);
-		intent.putExtra("position", String.valueOf(position));
-		intent.putExtra("id", String.valueOf(id));
-		startActivity(intent);
+	{		
+		//http://developer.android.com/guide/topics/fundamentals/fragments.html#CommunicatingWithActivity
+		m_listener.onMessageSelected(String.valueOf(id), String.valueOf(position));
 	}
+	
+
+	//Interface:  OnMessageSelectedListener
+	public interface OnMessageSelectedListener
+	{
+		public void onMessageSelected(String id, String position);
+	}
+	
 }
+
+

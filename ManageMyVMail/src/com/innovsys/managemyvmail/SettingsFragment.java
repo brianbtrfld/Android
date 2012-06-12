@@ -1,14 +1,21 @@
 package com.innovsys.managemyvmail;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-public class SettingsFragment extends Fragment
+public class SettingsFragment extends Fragment implements OnClickListener
 {
 
+	private OnSettingsChangeListener m_listener;
+	
+	private Button m_buttonSignOut;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) 
     {
@@ -32,7 +39,43 @@ public class SettingsFragment extends Fragment
         //Creates View Hierarchy.
         View top = inflater.inflate(R.layout.settings_fragment, container, false);
         
+        m_buttonSignOut = (Button)top.findViewById(R.id.buttonSignOut);
+        m_buttonSignOut.setOnClickListener(this);
+		
         return top;
     }
 
+	@Override
+	public void onAttach(Activity activity)
+	{
+		super.onAttach(activity);
+		
+		try
+		{
+			m_listener = (OnSettingsChangeListener)activity;
+		} 
+		catch (ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString());
+		}
+	}
+	
+	public void onClick(View v)
+	{
+		switch (v.getId()) 
+		{
+			case R.id.buttonSignOut:
+				m_listener.onSettingsChange(true, "temp1", "temp2");
+				break;
+	
+			default:
+				break;
+		}	
+	}
+
+	//Interface:  OnSettingsChangeListener
+	public interface OnSettingsChangeListener
+	{
+		public void onSettingsChange(boolean logout, String temp1, String temp2);
+	}
 }

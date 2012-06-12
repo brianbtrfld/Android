@@ -8,13 +8,22 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SETTINGS FRAGMENT"
+        android:text="MESSAGE DETAILS"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <Button
-        android:id="@+id/buttonSignOut"
-        android:layout_width="wrap_content"
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign Out" />
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10" />
 
 </LinearLayout>

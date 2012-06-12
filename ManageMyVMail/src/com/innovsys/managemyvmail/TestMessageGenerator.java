@@ -39,7 +39,7 @@ public class TestMessageGenerator extends SQLiteOpenHelper
 	{
 		
 		SQLiteDatabase db = this.getWritableDatabase();
-		//helper.onUpgrade(db, 1, 2);
+		//onUpgrade(db, 1, 2);
 		
 		ContentValues values = new ContentValues();
 		
@@ -63,6 +63,8 @@ public class TestMessageGenerator extends SQLiteOpenHelper
 		
 		db.insert(TestMessageGenerator.TABLE_MESSAGES, null, values);
 		values.clear();
+		
+		db.close();
 	}
 	
 	@Override
@@ -80,7 +82,9 @@ public class TestMessageGenerator extends SQLiteOpenHelper
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
 		Log.d(TAG, "Upgrading database from version " + oldVersion + " to version  " + newVersion);
+		
 		db.execSQL("drop table if exists " + TABLE_MESSAGES);
+		
 		onCreate(db);
 	}
 
