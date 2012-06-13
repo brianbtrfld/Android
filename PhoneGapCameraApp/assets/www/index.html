@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+  <title>PhoneGap WP7</title>
+  
+  <link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+
+  <script type="text/javascript" charset="utf-8" src="phonegap-1.4.1.js"></script>
+  <script type="text/javascript" charset="utf-8" src="main.js"></script>
+
+</head>
+<body>
+  <h1>VS Mag PhoneGap Photo Demo</h1>
+  <button onclick="capturePhoto();">Capture a Photo</button>
+  <br>
+  <button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">Display from Library</button>
+  <br>
+  <img style="display: none; width: 200px; height: 200px;" alt="" id="capturedPhoto" src="" />
+  <img style="display: none; width: 200px; height: 200px;" alt="" id="selectedFromPhotoLibrary" src="" />
+</body>
+</html>
