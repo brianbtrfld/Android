@@ -2,7 +2,7 @@
 <preference-headers
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<header android:fragment="com.innovsys.training.yambaclass.PrefsFragment"
+	<header android:fragment="net.briangbutterfield.training.yamba.PrefsFragment"
 		android:title="Connection Preferences" />
 
 </preference-headers>

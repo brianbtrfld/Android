@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/timelineFragment"
-        android:name="com.innovsys.training.yambaclass.TimelineFragment"
+        android:name="net.briangbutterfield.training.yamba.TimelineFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
