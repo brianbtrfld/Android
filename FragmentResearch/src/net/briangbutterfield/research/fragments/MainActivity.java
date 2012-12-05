@@ -3,6 +3,7 @@ package net.briangbutterfield.research.fragments;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class MainActivity extends FragmentActivity implements  SignInFragment.On
 		setContentView(R.layout.main);
 		
 		//Insert some test messages.
-		//new TestMessageGenerator(this).InsertTestMessages();
+		new TestMessageGenerator(this).InsertTestMessages();
 		
 		m_fragmentManager = getSupportFragmentManager();
 		m_localDB = new AppLocalStorage(this);
@@ -116,30 +117,16 @@ public class MainActivity extends FragmentActivity implements  SignInFragment.On
 	protected void onStart()
 	{
 		super.onStart();
+		
+		Log.d(App.TAG, "MainActivity onStart() called");
 	}
 
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
-	}
-
-	@Override
-	protected void onPause()
-	{
-		super.onPause();
-	}
-
-	@Override
-	protected void onStop()
-	{
-		super.onStop();
-	}
-
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
+		
+		Log.d(App.TAG, "MainActivity onResume() called");
 	}
 
 	@Override
@@ -147,14 +134,39 @@ public class MainActivity extends FragmentActivity implements  SignInFragment.On
 	{
 		
 		super.onSaveInstanceState(outState);
-        
-        //Store the current fragment that is visible so that 
-        //when the activity is destroyed and created again, 
-        //the right fragment can be displayed to the user.
-        outState.putInt(FRAGMENT_VISIBLE, m_fragmentVisible);
+	    
+	    //Store the current fragment that is visible so that 
+	    //when the activity is destroyed and created again, 
+	    //the right fragment can be displayed to the user.
+	    outState.putInt(FRAGMENT_VISIBLE, m_fragmentVisible);
+	    
+	    Log.d(App.TAG, "MainActivity onSavedInstanceState() called");
 	}
-	
-	
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		
+		Log.d(App.TAG, "MainActivity onPause() called");
+	}
+
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		
+		Log.d(App.TAG, "MainActivity onStop() called");
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		
+		Log.d(App.TAG, "MainActivity onDestroy() called");
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{

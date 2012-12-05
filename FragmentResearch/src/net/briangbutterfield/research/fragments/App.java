@@ -5,6 +5,8 @@ import android.app.Application;
 public class App extends Application
 {
 	
+	public static String TAG = "FragmentResearch";
+	
 	private static App m_instance;
 	
 	private AppLogger m_logger;

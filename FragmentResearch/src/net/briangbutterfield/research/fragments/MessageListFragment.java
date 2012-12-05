@@ -3,11 +3,13 @@ package net.briangbutterfield.research.fragments;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,28 +52,8 @@ public class MessageListFragment extends ListFragment implements ViewBinder
 		m_adapter.setViewBinder(this);
 
 		setListAdapter(m_adapter);
-	
-	}
-
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-		m_cursor.requery();
-	}
-
-	@Override
-	public void onPause()
-	{
-		super.onPause();
-		m_cursor.deactivate();
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		m_cursor.close();
+		
+		Log.d(App.TAG, "MessageListFragment onCreate() called");
 	}
 
 	@Override
@@ -87,6 +69,86 @@ public class MessageListFragment extends ListFragment implements ViewBinder
 		{
 			throw new ClassCastException(activity.toString());
 		}
+		
+		Log.d(App.TAG, "MessageListFragment onAttach() called");
+	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		
+		Log.d(App.TAG, "MessageListFragment onStart() called");
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		m_cursor.requery();
+		
+		Log.d(App.TAG, "MessageListFragment onResume() called");
+	}
+
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		m_cursor.deactivate();
+		
+//		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)
+//		{
+//			Log.d(App.TAG", "MessageListFragment onPause() SDK Version = Gingerbread or Less");
+//		}
+//		else
+//		{
+//			Log.d(App.TAG", "MessageListFragment onPause() SDK Version > Gingerbread");
+//			if (getActivity().isChangingConfigurations() == true)
+//			{
+//				Log.d(App.TAG, "MessageListFragment onPause() ConfigChange = Yes");
+//			}
+//			else
+//			{
+//				Log.d(App.TAG, "MessageListFragment onPause() ConfigChange = No");
+//			}
+//		}
+		
+		if ((Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1 && getActivity().isChangingConfigurations() == false) ||
+		    (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1))
+		{
+			Log.d(App.TAG, "MessageListFragment onPause() ConfigChange = No");
+		}
+		else
+		{
+			Log.d(App.TAG, "MessageListFragment onPause() ConfigChange = Yes");
+		}
+		
+	}
+
+	@Override
+	public void onStop()
+	{
+		if ((Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1 && getActivity().isChangingConfigurations() == false) ||
+		    (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1))
+		{
+			Log.d(App.TAG, "MessageListFragment onStop() ConfigChange = No");
+		}
+		else
+		{
+			Log.d(App.TAG, "MessageListFragment onStop() ConfigChange = Yes");
+		}
+		
+		super.onStop();
+	}
+
+	@Override
+	public void onDestroy()
+	{	
+		m_cursor.close();
+		
+		Log.d(App.TAG, "MessageListFragment onDestroy() called");
+		
+		super.onDestroy();
 	}
 
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex)
