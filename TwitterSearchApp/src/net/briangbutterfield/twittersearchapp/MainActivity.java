@@ -1,4 +1,4 @@
-package edu.sdsmt.butterfield.twittersearchapp;
+package net.briangbutterfield.twittersearchapp;
 
 import java.util.Arrays;
 
