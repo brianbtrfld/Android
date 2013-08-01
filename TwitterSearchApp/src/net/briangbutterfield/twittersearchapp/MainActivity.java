@@ -98,6 +98,7 @@ public class MainActivity extends Activity
 		}
 	};
 
+	// Prompt the user to delete all tags from saved preferences.
 	public OnClickListener clearTagsButtonListener = new OnClickListener()
 	{
 
@@ -122,7 +123,7 @@ public class MainActivity extends Activity
 		}
 	};
 
-	// Clear all of the saved tags from the list.
+	// Clear all tags from saved searches based on confirmation.
 	public DialogInterface.OnClickListener deleteAllTagsConfirmButtonListener = new DialogInterface.OnClickListener()
 	{
 
