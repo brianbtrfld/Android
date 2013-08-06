@@ -9,37 +9,38 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class AddressBookModel extends SQLiteOpenHelper
 {
+	
+	public static final String KEY_ID = "ContactID";
+	public static final String KEY_NAME = "Name";
+	public static final String KEY_PHONE = "Phone";
+	public static final String KEY_EMAIL = "Email";
+	public static final String KEY_STREET = "Street";
+	public static final String KEY_CITY = "City";
+	
+	private static final String TABLE_MYCONTACTS = "MyContacts";
+	
 	private static final String DATABASE_NAME = "MyAddressBook";
 	private static final int DATABASE_VERSION = 1;
-
-	private static final String TABLE_MYCONTACTS = "MyContacts";
-	private static final String TABLE_MYCONTACTS_COLUMN_ID = "ContactID";
-	private static final String TABLE_MYCONTACTS_COLUMN_NAME = "Name";
-	private static final String TABLE_MYCONTACTS_COLUMN_PHONE = "Phone";
-	private static final String TABLE_MYCONTACTS_COLUMN_EMAIL = "Email";
-	private static final String TABLE_MYCONTACTS_COLUMN_STREET = "Street";
-	private static final String TABLE_MYCONTACTS_COLUMN_CITY = "City";
 
 	private static final String TABLE_CREATE_MYCONTACTS =
 			"CREATE TABLE " +
 					TABLE_MYCONTACTS +
-					"(" + TABLE_MYCONTACTS_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-					TABLE_MYCONTACTS_COLUMN_NAME + " TEXT, " +
-					TABLE_MYCONTACTS_COLUMN_PHONE + " TEXT, " +
-					TABLE_MYCONTACTS_COLUMN_EMAIL + " TEXT, " +
-					TABLE_MYCONTACTS_COLUMN_STREET + " TEXT, " +
-					TABLE_MYCONTACTS_COLUMN_CITY + " TEXT);";
+					"(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+					KEY_NAME + " TEXT, " +
+					KEY_PHONE + " TEXT, " +
+					KEY_EMAIL + " TEXT, " +
+					KEY_STREET + " TEXT, " +
+					KEY_CITY + " TEXT);";
 
 	private SQLiteDatabase _db;
 
-	public AddressBookModel(Context context, String name, CursorFactory factory, int version)
+	public AddressBookModel(Context context)
 	{
 		// Call the parent class and pass the actual name and version of the
-		// database
-		// to be created. The version will be used in the future for determine
-		// whether
-		// onUpgrade() is called from the SQLiteOpenHelper extension.
-		super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+		// database to be created. The version will be used in the future for
+		// determine whether onUpgrade() is called from the SQLiteOpenHelper
+		// extension.
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	@Override
@@ -69,97 +70,98 @@ public class AddressBookModel extends SQLiteOpenHelper
 		// Take parameters and pass to method to populate the
 		// ContentValues data structure.
 		ContentValues values = populateContentValues(name, phone, email, address, city);
-		
+
 		// Open the database connect, keep it close to the actual operation.
 		openDBConnection();
-		
+
 		// Execute query to update the specified contact.
 		long rowsAffected = _db.insert(TABLE_MYCONTACTS, null, values);
 
 		// Close the database connection as soon as possible.
 		closeDBConnection();
-		
-		if (rowsAffected == 0)
-		{
-			// The contact row was not inserted, what should be done?
-		}
+
 	}
 
-	public void updateContact(int ID, String name, String phone, String email, String address, String city)
+	public void updateContact(int contactID, String name, String phone, String email, String address, String city)
 	{
 		// Take parameters and pass to method to populate the
 		// ContentValues data structure.
 		ContentValues values = populateContentValues(name, phone, email, address, city);
-		
+
 		// Open the database connect, keep it close to the actual operation.
 		openDBConnection();
-		
+
 		// Execute query to update the specified contact.
-		int rowsAffected = _db.update(TABLE_MYCONTACTS, values, "ID = ?", new String[] { String.valueOf(ID) });
+		int rowsAffected = _db.update(TABLE_MYCONTACTS,
+				values,
+				KEY_ID + " = ?",
+				new String[] { String.valueOf(contactID) });
 
 		// Close the database connection as soon as possible.
 		closeDBConnection();
-		
+
 		if (rowsAffected == 0)
 		{
 			// The contact row was not updated, what should be done?
 		}
 	}
 
-	public void deleteContact(int ID)
+	public void deleteContact(int contactID)
 	{
 		// Open the database connect, keep it close to the actual operation.
 		openDBConnection();
-		
+
 		// Execute query to delete the specified contact.
-		int rowsAffected = _db.delete(TABLE_MYCONTACTS, "ID = ?", new String[] { String.valueOf(ID) });
-		
+		int rowsAffected = _db.delete(TABLE_MYCONTACTS,
+				KEY_ID + " = ?",
+				new String[] { String.valueOf(contactID) });
+
 		// Close the database connection as soon as possible.
 		closeDBConnection();
-		
+
 		if (rowsAffected == 0)
 		{
 			// The contact row was not deleted, what should be done?
 		}
 	}
 
-	public Cursor getContact(int ID)
+	public Cursor getContact(int contactID)
 	{
 
-		if (ID == -1)
+		if (contactID == -1)
 		{
 			// -1 not a legal ID in table, assume all Contacts should be
-			// returned.
+			// returned.  _id is required by SimpleCursorAdaptor.
 			return _db.query(TABLE_MYCONTACTS,
-					new String[]
-					{ TABLE_MYCONTACTS_COLUMN_ID, TABLE_MYCONTACTS_COLUMN_NAME },
+					new String[] { KEY_ID + " as _id", KEY_NAME },
 					null,
 					null,
 					null,
 					null,
-					"Name ASC");
+					KEY_NAME);
 		}
 		else
 		{
 			// Return the specific contact row based on ID passed.
+			// _id is required by SimpleCursorAdaptor.
 			return _db.query(TABLE_MYCONTACTS,
+					new String[] { KEY_ID + " as _id", KEY_NAME },
+					KEY_ID + "=" + contactID,
 					null,
-					TABLE_MYCONTACTS_COLUMN_ID + "=" + ID,
 					null,
 					null,
-					null,
-					TABLE_MYCONTACTS_COLUMN_NAME);
+					KEY_NAME);
 		}
 
 	}
 
-	private void openDBConnection()
+	public void openDBConnection()
 	{
 		// Opens connection to the database for writing specifically.
 		_db = getWritableDatabase();
 	}
 
-	private void closeDBConnection()
+	public void closeDBConnection()
 	{
 		if (_db != null)
 		{
@@ -167,18 +169,19 @@ public class AddressBookModel extends SQLiteOpenHelper
 			_db.close();
 		}
 	}
-	
-	// Common function used to populate the ContentValues to be used in SQL insert
+
+	// Common function used to populate the ContentValues to be used in SQL
+	// insert
 	// or update methods.
-	private ContentValues populateContentValues (String name, String phone, String email, String address, String city)
+	private ContentValues populateContentValues(String name, String phone, String email, String address, String city)
 	{
 		ContentValues values = new ContentValues();
-		values.put(TABLE_MYCONTACTS_COLUMN_NAME, name);
-		values.put(TABLE_MYCONTACTS_COLUMN_PHONE, phone);
-		values.put(TABLE_MYCONTACTS_COLUMN_EMAIL, email);
-		values.put(TABLE_MYCONTACTS_COLUMN_STREET, address);
-		values.put(TABLE_MYCONTACTS_COLUMN_CITY, city);
-		
+		values.put(KEY_NAME, name);
+		values.put(KEY_PHONE, phone);
+		values.put(KEY_EMAIL, email);
+		values.put(KEY_STREET, address);
+		values.put(KEY_CITY, city);
+
 		return values;
 	}
 
