@@ -4,21 +4,23 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class AddressBookModel extends SQLiteOpenHelper
 {
-	
+
 	public static final String KEY_ID = "ContactID";
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_PHONE = "Phone";
 	public static final String KEY_EMAIL = "Email";
 	public static final String KEY_STREET = "Street";
 	public static final String KEY_CITY = "City";
-	
+
+	private static final String TAG = "AddressBookApp";
+
 	private static final String TABLE_MYCONTACTS = "MyContacts";
-	
+
 	private static final String DATABASE_NAME = "MyAddressBook";
 	private static final int DATABASE_VERSION = 1;
 
@@ -65,28 +67,37 @@ public class AddressBookModel extends SQLiteOpenHelper
 		}
 	}
 
-	public void insertContact(String name, String phone, String email, String address, String city)
+	public void insertContact(String name, String phone, String email, String street, String city)
 	{
 		// Take parameters and pass to method to populate the
 		// ContentValues data structure.
-		ContentValues values = populateContentValues(name, phone, email, address, city);
+		ContentValues values = populateContentValues(name, phone, email, street, city);
 
 		// Open the database connect, keep it close to the actual operation.
 		openDBConnection();
 
 		// Execute query to update the specified contact.
-		long rowsAffected = _db.insert(TABLE_MYCONTACTS, null, values);
+		long id = _db.insert(TABLE_MYCONTACTS, null, values);
+
+		Log.d(TAG, "ContactID inserted = " + String.valueOf(id));
 
 		// Close the database connection as soon as possible.
 		closeDBConnection();
 
 	}
 
-	public void updateContact(int contactID, String name, String phone, String email, String address, String city)
+	public void insertSampleContacts()
+	{
+		insertContact("Brian Butterfied", "605-390-0395", "brian@butter-field.net", "123 Main Street", "Rapid City");
+		insertContact("Test 2", "605-555-1212", "", "123 Some Street", "Somewhere, MI");
+		insertContact("Test 3", "605-555-1212", "", "123 Some Street", "Somewhere, MI");
+	}
+
+	public void updateContact(int contactID, String name, String phone, String email, String street, String city)
 	{
 		// Take parameters and pass to method to populate the
 		// ContentValues data structure.
-		ContentValues values = populateContentValues(name, phone, email, address, city);
+		ContentValues values = populateContentValues(name, phone, email, street, city);
 
 		// Open the database connect, keep it close to the actual operation.
 		openDBConnection();
@@ -125,13 +136,13 @@ public class AddressBookModel extends SQLiteOpenHelper
 		}
 	}
 
-	public Cursor getContact(int contactID)
+	public Cursor getContact(long contactID)
 	{
 
 		if (contactID == -1)
 		{
 			// -1 not a legal ID in table, assume all Contacts should be
-			// returned.  _id is required by SimpleCursorAdaptor.
+			// returned. _id is required by SimpleCursorAdaptor.
 			return _db.query(TABLE_MYCONTACTS,
 					new String[] { KEY_ID + " as _id", KEY_NAME },
 					null,
@@ -145,7 +156,7 @@ public class AddressBookModel extends SQLiteOpenHelper
 			// Return the specific contact row based on ID passed.
 			// _id is required by SimpleCursorAdaptor.
 			return _db.query(TABLE_MYCONTACTS,
-					new String[] { KEY_ID + " as _id", KEY_NAME },
+					new String[] { KEY_ID, KEY_NAME, KEY_PHONE, KEY_EMAIL, KEY_STREET, KEY_CITY },
 					KEY_ID + "=" + contactID,
 					null,
 					null,
@@ -173,13 +184,13 @@ public class AddressBookModel extends SQLiteOpenHelper
 	// Common function used to populate the ContentValues to be used in SQL
 	// insert
 	// or update methods.
-	private ContentValues populateContentValues(String name, String phone, String email, String address, String city)
+	private ContentValues populateContentValues(String name, String phone, String email, String street, String city)
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_NAME, name);
 		values.put(KEY_PHONE, phone);
 		values.put(KEY_EMAIL, email);
-		values.put(KEY_STREET, address);
+		values.put(KEY_STREET, street);
 		values.put(KEY_CITY, city);
 
 		return values;

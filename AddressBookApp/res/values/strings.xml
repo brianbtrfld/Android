@@ -10,5 +10,8 @@
     <string name="edittext_citystatezip_hint">City, State, Zip</string>
     <string name="button_save">Save</string>
     <string name="activity_addedit_contact_title">Contact</string>
+    <string name="action_menu_add_contact">Add Contact</string>
+    <string name="action_menu_delete_contact">Delete Contact</string>
+    <string name="action_menu_update_contact">Update Contact</string>
 
 </resources>
