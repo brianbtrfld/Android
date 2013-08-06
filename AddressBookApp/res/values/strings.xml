@@ -13,5 +13,8 @@
     <string name="action_menu_add_contact">Add Contact</string>
     <string name="action_menu_delete_contact">Delete Contact</string>
     <string name="action_menu_update_contact">Update Contact</string>
+    <string name="alert_title_missinginfo">Missing Information</string>
+    <string name="alert_message_missing_name">Name cannot be blank.</string>
+    <string name="alert_button_OK">OK</string>
 
 </resources>

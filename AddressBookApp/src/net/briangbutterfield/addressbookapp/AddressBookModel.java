@@ -19,10 +19,9 @@ public class AddressBookModel extends SQLiteOpenHelper
 
 	private static final String TAG = "AddressBookApp";
 
-	private static final String TABLE_MYCONTACTS = "MyContacts";
-
-	private static final String DATABASE_NAME = "MyAddressBook";
+	private static final String DATABASE_NAME = "MyAddressBook.db";
 	private static final int DATABASE_VERSION = 1;
+	private static final String TABLE_MYCONTACTS = "MyContacts";
 
 	private static final String TABLE_CREATE_MYCONTACTS =
 			"CREATE TABLE " +
@@ -88,12 +87,12 @@ public class AddressBookModel extends SQLiteOpenHelper
 
 	public void insertSampleContacts()
 	{
-		insertContact("Brian Butterfied", "605-390-0395", "brian@butter-field.net", "123 Main Street", "Rapid City");
-		insertContact("Test 2", "605-555-1212", "", "123 Some Street", "Somewhere, MI");
-		insertContact("Test 3", "605-555-1212", "", "123 Some Street", "Somewhere, MI");
+		insertContact("Brian Butterfield", "605-390-0395", "brianb@innovsys.com", "123 Main Street", "Rapid City, SD");
+		insertContact("Toni Logar", "605-555-1212", "toni@sdsmt.edu", "123 Some Street", "Somewhere, HI");
+		insertContact("David Springhetti", "605-555-1212", "davids@innovsys.com", "123 Some Street", "Somewhere, MI");
 	}
 
-	public void updateContact(int contactID, String name, String phone, String email, String street, String city)
+	public void updateContact(long contactID, String name, String phone, String email, String street, String city)
 	{
 		// Take parameters and pass to method to populate the
 		// ContentValues data structure.
@@ -117,7 +116,7 @@ public class AddressBookModel extends SQLiteOpenHelper
 		}
 	}
 
-	public void deleteContact(int contactID)
+	public void deleteContact(long contactID)
 	{
 		// Open the database connect, keep it close to the actual operation.
 		openDBConnection();
