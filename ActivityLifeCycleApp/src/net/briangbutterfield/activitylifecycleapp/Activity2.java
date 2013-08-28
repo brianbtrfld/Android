@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 public class Activity2 extends Activity
 {
@@ -15,6 +16,9 @@ public class Activity2 extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_activity2);
+		
+		_message = this.getString(R.string.activity_two) + " | " + this.getString(R.string.lc_oncreate);
+		Log.d(Common.TAG, _message);
 	}
 
 	@Override
@@ -71,7 +75,8 @@ public class Activity2 extends Activity
 		Log.d(Common.TAG, _message);
 	}
 	
-	private void callActivity3()
+	// Method wired up to buttonStartActivity3:onClick
+	public void callActivity3(View view)
 	{
 		Intent intent = new Intent(this, Activity3.class);
 		startActivity(intent);
