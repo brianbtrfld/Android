@@ -18,5 +18,7 @@
     <string name="title_activity_activity1">Activity 1</string>
     <string name="title_activity_activity2">Activity 2</string>
     <string name="title_activity_activity3">Activity 3</string>
+    <string name="lc_onsaveinstancestate">onSaveInstanceState</string>
+    <string name="lc_onrestoreinstancestate">onRestoreInstanceState</string>
 
 </resources>

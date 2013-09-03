@@ -49,6 +49,25 @@ public class Activity1 extends Activity implements OnClickListener
 	}
 
 	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		
+		_message = this.getString(R.string.activity_one) + " | " + this.getString(R.string.lc_onsaveinstancestate);
+		Log.d(Common.TAG, _message);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+
+		super.onRestoreInstanceState(savedInstanceState);
+		
+		_message = this.getString(R.string.activity_one) + " | " + this.getString(R.string.lc_onrestoreinstancestate);
+		Log.d(Common.TAG, _message);
+	}
+
+	@Override
 	protected void onResume()
 	{
 		super.onResume();
