@@ -10,11 +10,21 @@
     tools:context=".Activity2" >
 
     <Button
+        android:id="@+id/buttonFinishActivity2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:onClick="finishActivity2"
+        android:text="@string/button_finish_activity2" />
+
+    <Button
         android:id="@+id/buttonStartActivity3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:text="@string/button_start_activity3"
-        android:onClick="callActivity3" />
+        android:layout_below="@id/buttonFinishActivity2"
+        android:layout_centerHorizontal="true"
+        android:onClick="callActivity3"
+        android:text="@string/button_start_activity3" />
 
 </RelativeLayout>

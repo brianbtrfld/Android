@@ -16,6 +16,7 @@ public class Activity1 extends Activity implements OnClickListener
 	//  Emulator Rotation [Win = Left Ctrl + F12 OR Mac = fn + Left Ctrl + F12]
 	
 	private String _message = "";
+	private boolean _stateBoolean = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -44,6 +45,8 @@ public class Activity1 extends Activity implements OnClickListener
 	{
 		super.onPause();
 		
+		_stateBoolean = true;
+		
 		_message = this.getString(R.string.activity_one) + " | " + this.getString(R.string.lc_onpause);
 		Log.d(Common.TAG, _message);
 	}
@@ -53,17 +56,27 @@ public class Activity1 extends Activity implements OnClickListener
 	{
 		super.onSaveInstanceState(outState);
 		
-		_message = this.getString(R.string.activity_one) + " | " + this.getString(R.string.lc_onsaveinstancestate);
+		outState.putBoolean("StateBoolean", _stateBoolean);
+		
+		_message = this.getString(R.string.activity_one) + " | " + 
+		           this.getString(R.string.lc_onsaveinstancestate) + 
+				   " | StateBoolean = " + String.valueOf(_stateBoolean);
+		
 		Log.d(Common.TAG, _message);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState)
 	{
-
+		// NOTE:  Only called when Activity is killed, i.e. low memory condition or device rotation.
 		super.onRestoreInstanceState(savedInstanceState);
 		
-		_message = this.getString(R.string.activity_one) + " | " + this.getString(R.string.lc_onrestoreinstancestate);
+		_stateBoolean = savedInstanceState.getBoolean("StateBoolean");
+		
+		_message = this.getString(R.string.activity_one) + " | " + 
+		           this.getString(R.string.lc_onrestoreinstancestate) + 
+				   " | StateBoolean = " + String.valueOf(_stateBoolean);
+		
 		Log.d(Common.TAG, _message);
 	}
 
@@ -111,6 +124,8 @@ public class Activity1 extends Activity implements OnClickListener
 
 	private void callActivity2()
 	{
+		// Create an intent to start the activity, notice the use of the 
+		// actual class name.
 		Intent intent = new Intent(this, Activity2.class);
 		startActivity(intent);
 	}

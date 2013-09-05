@@ -78,7 +78,13 @@ public class Activity2 extends Activity
 	// Method wired up to buttonStartActivity3:onClick
 	public void callActivity3(View view)
 	{
+		
 		Intent intent = new Intent(this, Activity3.class);
 		startActivity(intent);
+	}
+	
+	public void finishActivity2(View view)
+	{
+		this.finish();
 	}
 }
