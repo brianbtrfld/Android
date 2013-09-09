@@ -33,13 +33,16 @@ public class Activity1 extends Activity implements OnClickListener
 		// Verify whether there was any state saved.
 		if (savedInstanceState == null)
 		{
-			_message = this.getString(R.string.activity_one) + " | " + 
-					   this.getString(R.string.lc_oncreate) +
-						" | StateBoolean = " + String.valueOf(_stateBoolean);
+			_message = this.getString(R.string.activity_one) + " | " +
+					this.getString(R.string.lc_oncreate) +
+					" | StateBoolean = " + String.valueOf(_stateBoolean);
 			Log.d(Common.TAG, _message);
 		}
 		else
 		{
+			// Restore the state member variable.
+			_stateBoolean = savedInstanceState.getBoolean(_stateBooleanKey);
+			
 			_message = this.getString(R.string.activity_one) + " | " +
 					this.getString(R.string.lc_oncreate) +
 					" | StateBoolean = " + String.valueOf(_stateBoolean);

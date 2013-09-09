@@ -9,7 +9,7 @@
     <string name="lc_oncreate">onCreate()</string>
     <string name="lc_ondestroy">onDestroy()</string>
     <string name="lc_onpause">onPause()</string>
-    <string name="lc_onresume">onRestart()</string>
+    <string name="lc_onresume">onResume()</string>
     <string name="lc_onrestart">onRestart()</string>
     <string name="lc_onstart">onStart()</string>
     <string name="lc_onstop">onStop()</string>
