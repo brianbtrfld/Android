@@ -9,12 +9,14 @@
     <Button
         android:id="@+id/tagButton"
         android:layout_width="@dimen/tagButtonWidth"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <Button
         android:id="@+id/editTagButton"
         android:layout_width="@dimen/editButtonWidth"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/edit" />
 
 </TableRow>
