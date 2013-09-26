@@ -3,13 +3,14 @@
     android:id="@+id/tagTableRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
+    android:layout_gravity="center_horizontal" 
     android:background="@android:color/transparent" >
 
     <Button
         android:id="@+id/tagButton"
         android:layout_width="@dimen/tagButtonWidth"
         android:layout_height="wrap_content"
+        style="?android:attr/buttonBarButtonStyle"
         android:gravity="center" />
 
     <Button
@@ -17,6 +18,7 @@
         android:layout_width="@dimen/editButtonWidth"
         android:layout_height="wrap_content"
         android:gravity="center"
+        style="?android:attr/buttonBarButtonStyle"
         android:text="@string/edit" />
 
 </TableRow>

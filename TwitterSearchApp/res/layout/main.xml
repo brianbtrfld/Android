@@ -72,24 +72,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/light_orange" >
-   		
-        <ScrollView
-            android:id="@+id/tagListScrollView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_span="2"
-            android:padding="5dp" >
+        android:background="@color/light_orange"
+        android:scrollbarStyle="insideOverlay" >
 
-            <TableLayout
-                android:id="@+id/tagListTableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp"
-                android:stretchColumns="*" />
-            
-        </ScrollView>
-
+        <TableLayout
+            android:id="@+id/tagListTableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:stretchColumns="*" />
     </TableRow>
 
     <TableRow
