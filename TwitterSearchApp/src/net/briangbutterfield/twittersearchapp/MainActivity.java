@@ -1,5 +1,6 @@
 package net.briangbutterfield.twittersearchapp;
 
+import java.net.URLEncoder;
 import java.util.Arrays;
 
 import android.app.Activity;
@@ -36,6 +37,7 @@ public class MainActivity extends Activity
 	{
 		// Call super class.
 		super.onCreate(savedInstanceState);
+		
 		// Associate the activity with the layout.
 		setContentView(R.layout.main);
 
@@ -52,7 +54,7 @@ public class MainActivity extends Activity
 		// Register event listeners for the buttons.
 		_saveButton.setOnClickListener(saveButtonListener);
 		_clearTagsButton.setOnClickListener(clearTagsButtonListener);
-
+		
 		refreshTagList(null);
 	}
 
@@ -76,6 +78,7 @@ public class MainActivity extends Activity
 			// Store Tag if query and tag values are not empty.
 			if (query.length() > 0 && tag.length() > 0)
 			{
+
 				storeTag(tag, query);
 
 				// Clear the contents so the user can enter a new tag value.
@@ -153,12 +156,13 @@ public class MainActivity extends Activity
 			String searchText = _savedSearches.getString(tag, null);
 
 			// Build the search URL to pass to the intent.
-			String url = getString(R.string.searchURL) + searchText;
+			@SuppressWarnings("deprecation")
+			String url = getString(R.string.searchURL) + URLEncoder.encode(searchText);
 
 			// Sample URL:
 			// http://twitter.com/search?q=iqmetrix
 			// NOTE: search.twitter.com is not longer available.
-
+			
 			// Create Intent and pass URL to launch a web browser.
 			Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
@@ -251,7 +255,7 @@ public class MainActivity extends Activity
 		// Establish Edit button and register event listener.
 		Button editButton = (Button) tagRowView.findViewById(R.id.editTagButton);
 		editButton.setOnClickListener(editButtonListener);
-
+		
 		// Add Tag and Edit buttons to the queryTableLayout.
 		_tagListTableLayout.addView(tagRowView, index);
 

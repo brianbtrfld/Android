@@ -3,22 +3,24 @@
     android:id="@+id/tagTableRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal" 
     android:background="@android:color/transparent" >
 
-    <Button
-        android:id="@+id/tagButton"
-        android:layout_width="@dimen/tagButtonWidth"
-        android:layout_height="wrap_content"
-        style="?android:attr/buttonBarButtonStyle"
-        android:gravity="center" />
-
-    <Button
-        android:id="@+id/editTagButton"
-        android:layout_width="@dimen/editButtonWidth"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        style="?android:attr/buttonBarButtonStyle"
-        android:text="@string/edit" />
+    <!-- 	    android:layout_width="@dimen/tagButtonWidth" -->
+    <!-- 	    android:layout_width="@dimen/editButtonWidth" -->
+    
+	<Button
+	    android:id="@+id/tagButton"
+		android:layout_width="0px"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="3"
+	    android:gravity="center" />
+	
+	<Button
+	    android:id="@+id/editTagButton"
+		android:layout_width="0px"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:gravity="center"
+	    android:text="@string/edit" />
 
 </TableRow>
