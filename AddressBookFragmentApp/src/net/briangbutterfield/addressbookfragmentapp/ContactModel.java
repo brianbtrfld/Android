@@ -1,18 +1,14 @@
 package net.briangbutterfield.addressbookfragmentapp;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.SimpleAdapter;
 
 public class ContactModel extends SQLiteOpenHelper
 {
@@ -24,13 +20,6 @@ public class ContactModel extends SQLiteOpenHelper
 	public static final String KEY_STREET = "Street";
 	public static final String KEY_CITY = "City";
 	
-	public static final int INDEX_ID = 0;
-	public static final int INDEX_NAME = 1;
-	public static final int INDEX_PHONE = 2;
-	public static final int INDEX_EMAIL = 3;
-	public static final int INDEX_STREET = 4;
-	public static final int INDEX_CITY = 5;
-
 	private static final String TAG = "AddressBookApp";
 
 	private static final String DATABASE_NAME = "MyAddressBook.db";
@@ -50,12 +39,19 @@ public class ContactModel extends SQLiteOpenHelper
 	private SQLiteDatabase _db;
 	private static ContactModel _instance;
 	
+	/**
+	 * Class defined to allow for the passing of contact data between
+	 * the model, activity, and fragments.  Also, used to define the 
+	 * contents of an ArrayAdapter.
+	 * @author brianb
+	 *
+	 */
 	public static class Contact
 	{
 
 		public Contact()
 		{
-			
+			ContactID = -1;
 		}
 		
 		public Contact(long contactID)
@@ -71,6 +67,13 @@ public class ContactModel extends SQLiteOpenHelper
 		public String City;
 		
 		
+		// Used by ArrayAdapter to determine
+		// what to display in the list.
+		@Override
+		public String toString() 
+		{
+		    return Name;
+		}
 	}
 
 	public ContactModel(Context context)
@@ -106,14 +109,14 @@ public class ContactModel extends SQLiteOpenHelper
 	
 	public static synchronized ContactModel getInstance(Context context)
 	{
-		
+		// Used to synchronize access and force singleton on the 
+		// database helper object.
 		if (_instance == null)
 		{
 			_instance = new ContactModel(context);
 		}
 		
 		return _instance;
-		
 	}
 
 	public void insertContact(Contact contact)
@@ -188,7 +191,7 @@ public class ContactModel extends SQLiteOpenHelper
 		}
 	}
 
-	public void deleteContact(long contactID)
+	public void deleteContact(Contact contact)
 	{
 		// Open the database connect, keep it close to the actual operation.
 		openDBConnection();
@@ -196,7 +199,7 @@ public class ContactModel extends SQLiteOpenHelper
 		// Execute query to delete the specified contact.
 		int rowsAffected = _db.delete(TABLE_MYCONTACTS,
 				KEY_ID + " = ?",
-				new String[] { String.valueOf(contactID) });
+				new String[] { String.valueOf(contact.ContactID) });
 
 		// Close the database connection as soon as possible.
 		closeDBConnection();
@@ -209,8 +212,7 @@ public class ContactModel extends SQLiteOpenHelper
 
 	public Contact getContact(long contactID)
 	{
-		Contact contact = new Contact();
-				
+		
 		openDBConnection();
 		
 		// Return the specific contact row based on ID passed.
@@ -225,18 +227,13 @@ public class ContactModel extends SQLiteOpenHelper
 		
 		if (cursor.moveToFirst())
 		{
-			contact.ContactID = cursor.getLong(INDEX_ID); 
-			contact.Name = cursor.getString(INDEX_NAME);
-			contact.Phone = cursor.getString(INDEX_PHONE);
-			contact.Email = cursor.getString(INDEX_EMAIL);
-			contact.Street = cursor.getString(INDEX_STREET);
-			contact.City = cursor.getString(INDEX_CITY);
+			return cursorToContact(cursor);
 		}
 		
 		cursor.close();
 		closeDBConnection();
 
-		return contact;
+		return null;
 	}
 	
 	public List<Contact> getContacts()
@@ -246,7 +243,7 @@ public class ContactModel extends SQLiteOpenHelper
 		openDBConnection();
 		
 		Cursor cursor = _db.query(TABLE_MYCONTACTS,
-								  new String[] { KEY_ID + " as _id", KEY_NAME },
+								  new String[] { KEY_ID, KEY_NAME, KEY_PHONE, KEY_EMAIL, KEY_STREET, KEY_CITY},
 								  null,
 								  null,
 								  null,
@@ -285,20 +282,21 @@ public class ContactModel extends SQLiteOpenHelper
 
 	private Contact cursorToContact(Cursor cursor)
 	{
-		Contact contact = new Contact(cursor.getLong(INDEX_ID)); 
-		contact.Name = cursor.getString(INDEX_NAME);
-		//contact.Phone = cursor.getString(INDEX_PHONE);
-		//contact.Email = cursor.getString(INDEX_EMAIL);
-		//contact.Street = cursor.getString(INDEX_STREET);
-		//contact.City = cursor.getString(INDEX_CITY);
+		Contact contact = new Contact(cursor.getLong(cursor.getColumnIndex(KEY_ID))); 
+		contact.Name = cursor.getString(cursor.getColumnIndex(KEY_NAME)); 
+		contact.Phone = cursor.getString(cursor.getColumnIndex(KEY_PHONE)); 
+		contact.Email = cursor.getString(cursor.getColumnIndex(KEY_EMAIL)); 
+		contact.Street = cursor.getString(cursor.getColumnIndex(KEY_STREET)); 
+		contact.City = cursor.getString(cursor.getColumnIndex(KEY_CITY)); 
 		
 		return contact;
 	}
 
-	// Common function used to populate the ContentValues to be used in SQL
-	// insert or update methods.
 	private ContentValues populateContentValues(Contact contact)
 	{
+		// Common function used to populate the ContentValues to be used in SQL
+		// insert or update methods.
+		
 		ContentValues values = new ContentValues();
 		values.put(KEY_NAME, contact.Name);
 		values.put(KEY_PHONE, contact.Phone);

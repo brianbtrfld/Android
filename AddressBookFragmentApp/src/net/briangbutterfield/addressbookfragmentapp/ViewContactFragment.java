@@ -4,8 +4,6 @@ import net.briangbutterfield.addressbookfragmentapp.ContactModel.Contact;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +17,7 @@ import android.widget.EditText;
 
 public class ViewContactFragment extends Fragment
 {
+	public Contact _contact = null;
 
 	private IContactControlListener _listener;
 	
@@ -28,22 +27,28 @@ public class ViewContactFragment extends Fragment
 	private EditText _editTextStreet;
 	private EditText _editTextCity;
 	private Button _buttonSaveContact;
-
-	private long _contactID = -1;
 	
+	private boolean _modeUpdate = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
-		setHasOptionsMenu(true);
+		// Keep member variables and state, not the best approach, 
+		// but the Contact class would need to implement Parable
+		// in order to be passed in Bundle (from both outside the
+		// fragment and inside the fragment on rotation).
+		setRetainInstance(true);
 		
+		// Tells the host Activity to display the appropriate
+		// option menu.
+		setHasOptionsMenu(true);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		
 		// Inflate the UI.
 		View rootView = inflater.inflate(R.layout.fragment_view_contact, container, false);
 
@@ -63,25 +68,22 @@ public class ViewContactFragment extends Fragment
 			{
 				if (_editTextName.getText().toString().isEmpty() == false)
 				{
-					Contact contact = new ContactModel.Contact();
-					contact.ContactID = _contactID;
-					contact.Name = _editTextName.getText().toString();
-					contact.Phone = _editTextPhone.getText().toString();
-					contact.Email = _editTextEmail.getText().toString();
-					contact.Street = _editTextStreet.getText().toString();
-					contact.City = _editTextCity.getText().toString();
+					_contact.Name = _editTextName.getText().toString();
+					_contact.Phone = _editTextPhone.getText().toString();
+					_contact.Email = _editTextEmail.getText().toString();
+					_contact.Street = _editTextStreet.getText().toString();
+					_contact.City = _editTextCity.getText().toString();
 					
-					if (_contactID > 0)
+					if (_contact.ContactID > 0)
 					{
 						// Update the contact in the database.
-						_listener.contactUpdate(contact);
+						_listener.contactUpdate(_contact);
 					}
 					else
 					{
 						// Insert the contact into the database.
-						_listener.contactInsert(contact);
+						_listener.contactInsert(_contact);
 					}
-					
 				}
 				else
 				{
@@ -100,38 +102,6 @@ public class ViewContactFragment extends Fragment
 		return rootView;
 	}
 
-
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-
-		// Retrieve the bundle "args" of data that was added to the intent
-		// and passed to the fragment.
-		Bundle args = getArguments();
-		
-		if (args != null)
-		{
-			// If there are extras, it is known to be the ContactID.
-			// In this case, retrieve the ContactID and disable
-			// all of the views because this is only a "view"
-			// of the contact.
-			_contactID = args.getLong(ContactModel.KEY_ID);
-
-			// Do not allow editing.
-			_editTextName.setEnabled(false);
-			_editTextPhone.setEnabled(false);
-			_editTextEmail.setEnabled(false);
-			_editTextStreet.setEnabled(false);
-			_editTextCity.setEnabled(false);
-
-			// Do not display the Save Contact button initially,
-			// since the user is only viewing the contact.
-			_buttonSaveContact.setVisibility(View.INVISIBLE);
-		}
-	}
-	
 	@Override
 	public void onAttach(Activity activity)
 	{
@@ -153,13 +123,40 @@ public class ViewContactFragment extends Fragment
 	{
 		super.onResume();
 
-		if (_contactID > 0)
+		if (_contact == null)
 		{
-			// If there is a ContactID, execute the AsyncTask
-			// to retrieve all of the Contact details to be
-			// displayed.
-			new LoadContactTask().execute(_contactID);
+			// Nothing to see here.
+			return;
 		}
+		
+		if (_contact.ContactID > 0 && _modeUpdate == false)
+		{
+			// Do not allow editing.
+			_editTextName.setEnabled(false);
+			_editTextPhone.setEnabled(false);
+			_editTextEmail.setEnabled(false);
+			_editTextStreet.setEnabled(false);
+			_editTextCity.setEnabled(false);
+
+			// Do not display the Save Contact button initially,
+			// since the user is only viewing the contact.
+			_buttonSaveContact.setVisibility(View.INVISIBLE);
+		}
+		
+		// Populate teh
+		displayContact();
+	}
+	
+	@Override
+	public void onPause()
+	{
+		// Only on non-config change, reset the mode.
+		if (getActivity().isChangingConfigurations() == false)
+		{
+			_modeUpdate = false;
+		}
+		
+		super.onPause();
 	}
 
 	@Override
@@ -167,17 +164,18 @@ public class ViewContactFragment extends Fragment
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getActivity().getMenuInflater().inflate(R.menu.menu_view_contact_activity, menu);
-
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-
 		switch (item.getItemId())
 		{
 			case R.id.action_update_contact:
 			{
+				
+				_modeUpdate = true;
+				
 				// Allow for editing on the fields.
 				_editTextName.setEnabled(true);
 				_editTextPhone.setEnabled(true);
@@ -202,7 +200,7 @@ public class ViewContactFragment extends Fragment
 				_buttonSaveContact.setVisibility(View.INVISIBLE);
 
 				// Delete Contact from the database.
-				_listener.contactDelete(_contactID);
+				_listener.contactDelete(_contact);
 
 				return true;
 			}
@@ -211,64 +209,15 @@ public class ViewContactFragment extends Fragment
 				return super.onOptionsItemSelected(item);
 			}
 		}
-
 	}
 
-	private class LoadContactTask extends AsyncTask<Long, Object, Cursor>
+	private void displayContact()
 	{
-
-		ContactModel _model;
-
-		@Override
-		protected void onPreExecute()
-		{
-			// NOTE: onPreExecute executes on the UI (Main) Thread.
-			// Instance the AddressBookModel object.
-			_model = ContactModel.getInstance(getActivity());
-		}
-
-		@Override
-		protected Cursor doInBackground(Long... params)
-		{
-			Cursor returnCursor = null;
-
-			// NOTE: doInBackground will not execute on the UI Thread.
-
-			// Calls the AddressBookModel to retrieve a Cursor populated
-			// with the specific Contact details.
-
-			// Retrieve the contact from the database.
-			//returnCursor = _model.getContact(params[0]);
-
-			// Returning the populated cursor to the
-			// onPostExecute() method which runs on the UI
-			// thread, so the UI views can be populated with
-			// the data.
-			return returnCursor;
-		}
-
-		@Override
-		protected void onPostExecute(Cursor result)
-		{
-			// NOTE: onPostExecute executes on the UI (Main) Thread.
-
-			if (result.moveToFirst() == true)
-			{
-				_editTextName.setText(result.getString(result.getColumnIndex(ContactModel.KEY_NAME)));
-				_editTextPhone.setText(result.getString(result.getColumnIndex(ContactModel.KEY_PHONE)));
-				_editTextEmail.setText(result.getString(result.getColumnIndex(ContactModel.KEY_EMAIL)));
-				_editTextStreet.setText(result.getString(result.getColumnIndex(ContactModel.KEY_STREET)));
-				_editTextCity.setText(result.getString(result.getColumnIndex(ContactModel.KEY_CITY)));
-			}
-
-			// Close the Cursor since the data fields have been extracted.
-			result.close();
-
-			// Close the database connection.
-			//_model.closeDBConnection();
-
-		}
-
+		// Use the member Contact to populate the view.
+		_editTextName.setText(_contact.Name);
+		_editTextPhone.setText(_contact.Phone);
+		_editTextEmail.setText(_contact.Email);
+		_editTextStreet.setText(_contact.Street);
+		_editTextCity.setText(_contact.City);
 	}
-
 }
