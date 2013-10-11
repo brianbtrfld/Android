@@ -36,7 +36,7 @@ public class ViewContactFragment extends Fragment
 		super.onCreate(savedInstanceState);
 
 		// Keep member variables and state, not the best approach, 
-		// but the Contact class would need to implement Parable
+		// but the Contact class would need to implement Parceable
 		// in order to be passed in Bundle (from both outside the
 		// fragment and inside the fragment on rotation).
 		setRetainInstance(true);
@@ -143,7 +143,7 @@ public class ViewContactFragment extends Fragment
 			_buttonSaveContact.setVisibility(View.INVISIBLE);
 		}
 		
-		// Populate teh
+		// Populate the View.
 		displayContact();
 	}
 	
@@ -163,7 +163,7 @@ public class ViewContactFragment extends Fragment
 	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflator)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getActivity().getMenuInflater().inflate(R.menu.menu_view_contact_activity, menu);
+		getActivity().getMenuInflater().inflate(R.menu.menu_contact_view, menu);
 	}
 
 	@Override

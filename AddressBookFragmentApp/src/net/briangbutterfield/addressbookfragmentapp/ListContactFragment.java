@@ -33,7 +33,6 @@ public class ListContactFragment extends ListFragment
 		
 		setHasOptionsMenu(true);
 
-		refreshContactList();
 	}
 	
 	@Override
@@ -41,7 +40,7 @@ public class ListContactFragment extends ListFragment
 	{
 		// Inflate the Menu resource to be associated with
 		// this activity.
-		getActivity().getMenuInflater().inflate(R.menu.menu_addressbook_activity, menu);
+		getActivity().getMenuInflater().inflate(R.menu.menu_contact_list, menu);
 
 		super.onCreateOptionsMenu(menu, menuInflator);
 	}

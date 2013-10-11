@@ -20,7 +20,7 @@ public class ContactModel extends SQLiteOpenHelper
 	public static final String KEY_STREET = "Street";
 	public static final String KEY_CITY = "City";
 	
-	private static final String TAG = "AddressBookApp";
+	private static final String TAG = "AddressBookFragmentApp";
 
 	private static final String DATABASE_NAME = "MyAddressBook.db";
 	private static final int DATABASE_VERSION = 1;
