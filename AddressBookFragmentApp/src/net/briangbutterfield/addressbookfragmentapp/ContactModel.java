@@ -216,7 +216,6 @@ public class ContactModel extends SQLiteOpenHelper
 		openDBConnection();
 		
 		// Return the specific contact row based on ID passed.
-		// _id is required by SimpleCursorAdaptor.
 		Cursor cursor = _db.query(TABLE_MYCONTACTS,
 							      new String[] { KEY_ID, KEY_NAME, KEY_PHONE, KEY_EMAIL, KEY_STREET, KEY_CITY },
 								  KEY_ID + "=" + contactID,
