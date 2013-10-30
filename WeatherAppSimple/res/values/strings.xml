@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string name="app_name">Weather App Simple</string>
+   
+   <string name="labelTemp">Temperature:&#160;</string>
+   <string name="labelFeelsLikeTemp">Feels like:&#160;</string>
+   <string name="labelHumidity">Humidity:&#160;</string>
+   <string name="labelChanceOfPrecip">Chance of Precipitation:&#160;</string>
+   
+   <string name="progressMessage">Loading Current Forecast</string>
+
+   <string name="null_data_toast">Data could not be read from web service.</string>
+</resources>
