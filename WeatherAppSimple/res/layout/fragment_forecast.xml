@@ -26,7 +26,8 @@
                 android:layout_marginBottom="15dp"
                 android:gravity="center"
                 android:textColor="@android:color/black"
-                android:textSize="27sp" />
+                android:textSize="27sp"
+                android:text="@string/pendingWebCall" />
 
             <TextView
                 android:id="@+id/labelTemp"
@@ -45,7 +46,8 @@
                 android:gravity="center"
                 android:padding="3dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:text="@string/pendingWebCall" />
 
             <TextView
                 android:id="@+id/labelFeelsLikeTemp"
@@ -64,7 +66,8 @@
                 android:gravity="center"
                 android:padding="3dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:text="@string/pendingWebCall" />
 
             <TextView
                 android:id="@+id/labelHumidity"
@@ -83,7 +86,8 @@
                 android:gravity="center"
                 android:padding="3dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:text="@string/pendingWebCall" />
 
             <TextView
                 android:id="@+id/labelChanceOfPrecip"
@@ -102,7 +106,8 @@
                 android:gravity="center"
                 android:padding="3dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:text="@string/pendingWebCall" />
         </LinearLayout>
     </ScrollView>
 

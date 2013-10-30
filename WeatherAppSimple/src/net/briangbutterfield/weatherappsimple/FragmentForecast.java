@@ -4,7 +4,6 @@ package net.briangbutterfield.weatherappsimple;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.deitel.weatherviewer.R;
-
 public class FragmentForecast extends Fragment
 {
-
-
 	public static final String LOCATION_KEY = "key_location";
-	private static final String FORECAST_KEY = "key_forecast";
-	private String zipcodeString;
+	public static final String FORECAST_KEY = "key_forecast";
 
+	private ForecastLocation _location = new ForecastLocation();
+	private Forecast _forecast = new Forecast();
+	
 	private View _forecastView;
 	private View _progressView;
 	
@@ -32,9 +29,6 @@ public class FragmentForecast extends Fragment
 	private TextView _textViewChanceOfPrecip;
 	private ImageView _imageViewForecast;
 	
-	private ForecastLocation _location = new ForecastLocation();
-	private Forecast _forecast = new Forecast();
-	
 	public FragmentForecast()
 	{
 	}
@@ -43,8 +37,8 @@ public class FragmentForecast extends Fragment
 	public void onCreate(Bundle argumentsBundle)
 	{
 		super.onCreate(argumentsBundle);
-
-		this.zipcodeString = getArguments().getString(LOCATION_KEY);
+		
+		_location.new LoadLocation(new AsynTaskListener()).execute(getArguments().getString(LOCATION_KEY));
 	}
 
 	@Override
@@ -54,11 +48,6 @@ public class FragmentForecast extends Fragment
 		
 		savedInstanceStateBundle.putParcelable(LOCATION_KEY, _location);
 		savedInstanceStateBundle.putParcelable(FORECAST_KEY, _forecast);
-	}
-
-	public String getZipcode()
-	{
-		return zipcodeString;
 	}
 
 	@Override
@@ -88,33 +77,40 @@ public class FragmentForecast extends Fragment
 		{
 			_forecastView.setVisibility(View.GONE);
 			_progressView.setVisibility(View.VISIBLE);
-
-			_location.new LoadLocation(new AsynTaskListener()).execute(zipcodeString);
-
 		}
 		else
 		{
 			_location = savedInstanceStateBundle.getParcelable(LOCATION_KEY);
 			_forecast = savedInstanceStateBundle.getParcelable(FORECAST_KEY);
-			setView();
+			updateView();
 		}
 	}
 
-	private void setView()
+	private void updateView()
 	{
-		_imageViewForecast.setImageBitmap(_forecast.Image);
+		if (_location.City != null)
+		{
+			_textViewLocation.setText(_location.City + " " + _location.State + ", " + _location.ZipCode + " " + _location.Country);
+		}
 		
-		_textViewLocation.setText(_location.City + " " + _location.State + ", " + _location.ZipCode + " " + _location.Country);
-		_textViewTemp.setText(_forecast.Temp + (char) 0x00B0 + "F");
-		_textViewFeelsLike.setText(_forecast.FeelsLikeTemp + (char) 0x00B0 + "F");
-		_textViewHumidity.setText(_forecast.Humidity + (char) 0x0025);
-		_textViewChanceOfPrecip.setText(_forecast.ChanceOfPrecipitation + (char) 0x0025);
-		
+		if (_forecast.Temp != null)
+		{
+			_textViewTemp.setText(_forecast.Temp + (char) 0x00B0 + "F");
+			_textViewFeelsLike.setText(_forecast.FeelsLikeTemp + (char) 0x00B0 + "F");
+			_textViewHumidity.setText(_forecast.Humidity + (char) 0x0025);
+			_textViewChanceOfPrecip.setText(_forecast.ChanceOfPrecipitation + (char) 0x0025);
+			
+			if (_forecast.Image != null);
+			{
+				_imageViewForecast.setImageBitmap(_forecast.Image);
+			}
+		}
+			
 		_progressView.setVisibility(View.GONE);
 		_forecastView.setVisibility(View.VISIBLE);
 		
 	}
-
+	
 	private class AsynTaskListener implements IListeners
 	{
 		@Override
@@ -123,14 +119,16 @@ public class FragmentForecast extends Fragment
 			
 			_location = location;
 			
-			if (_location.City == null)
+			if (_location == null)
 			{
-				Toast errorToast = Toast.makeText(getActivity(), getResources().getString(R.string.null_data_toast), Toast.LENGTH_LONG);
-				errorToast.setGravity(Gravity.CENTER, 0, 0);
-				errorToast.show();
+				Toast.makeText(getActivity(), 
+						       getResources().getString(R.string.null_data_toast), 
+						       Toast.LENGTH_LONG).show();
 				return;
 			}
 
+			updateView();
+			
 			_forecast.new LoadForecast(new AsynTaskListener()).execute(_location.ZipCode);
 		}
 
@@ -140,20 +138,15 @@ public class FragmentForecast extends Fragment
 			
 			_forecast = forecast;
 			
-			if (FragmentForecast.this.isAdded() == false)
+			if (_forecast == null)
 			{
+				Toast.makeText(getActivity(), 
+						       getResources().getString(R.string.null_data_toast), 
+						       Toast.LENGTH_LONG).show();
 				return;
 			}
-			else if (forecast.Image == null)
-			{
-				Toast errorToast = Toast.makeText(getActivity(), getResources().getString(R.string.null_data_toast), Toast.LENGTH_LONG);
-				errorToast.setGravity(Gravity.CENTER, 0, 0);
-				errorToast.show();
-				return;
-			}
-
-			setView();
 			
+			updateView();
 		}
 	}
 }
