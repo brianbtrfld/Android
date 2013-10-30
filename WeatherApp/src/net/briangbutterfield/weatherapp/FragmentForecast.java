@@ -2,8 +2,6 @@
 // Displays forecast information for a single city.
 package net.briangbutterfield.weatherapp;
 
-import net.briangbutterfield.weatherapp.TaskForecast.ForecastListener;
-import net.briangbutterfield.weatherapp.TaskLocation.LocationLoadedListener;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Resources;
@@ -52,9 +50,9 @@ public class FragmentForecast extends Fragment
 		Bundle argumentsBundle = new Bundle();
 		argumentsBundle.putString(ZIP_CODE_KEY, zipcodeString);
 		newForecastFragment.setArguments(argumentsBundle);
-		
+
 		return newForecastFragment;
-		
+
 	}
 
 	public static FragmentForecast newInstance(Bundle argumentsBundle)
@@ -118,7 +116,9 @@ public class FragmentForecast extends Fragment
 			forecastView.setVisibility(View.GONE);
 			loadingTextView.setVisibility(View.VISIBLE);
 
-			new TaskLocation(zipcodeString, context, new WeatherLocationLoadedListener(zipcodeString)).execute();
+			ForecastLocation forecastLocation = new ForecastLocation();
+			forecastLocation.new LoadLocation(new AsynTaskListener()).execute(zipcodeString);
+
 		}
 		else
 		{
@@ -131,16 +131,34 @@ public class FragmentForecast extends Fragment
 		}
 	}
 
-	ForecastListener weatherForecastListener = new ForecastListener()
+	private class AsynTaskListener implements IListeners
 	{
 		@Override
-		public void onForecastLoaded(Bitmap imageBitmap, String temperatureString, String feelsLikeString, String humidityString, String precipitationString)
+		public void onLocationLoaded(ForecastLocation location)
 		{
-			if (!FragmentForecast.this.isAdded())
+			if (location.City == null)
+			{
+				Toast errorToast = Toast.makeText(context, context.getResources().getString(R.string.null_data_toast), Toast.LENGTH_LONG);
+				errorToast.setGravity(Gravity.CENTER, 0, 0);
+				errorToast.show();
+				return;
+			}
+
+			locationTextView.setText(location.City + " " + location.State + ", " + location.ZipCode + " "
+					+ location.Country);
+
+			Forecast forecast = new Forecast();
+			forecast.new LoadForecast(new AsynTaskListener()).execute(location.ZipCode);
+		}
+
+		@Override
+		public void onForecastLoaded(Bitmap image, String temperature, String feelsLike, String humidity, String precipitation)
+		{
+			if (FragmentForecast.this.isAdded() == false)
 			{
 				return;
 			}
-			else if (imageBitmap == null)
+			else if (image == null)
 			{
 				Toast errorToast = Toast.makeText(context, context.getResources().getString(R.string.null_data_toast), Toast.LENGTH_LONG);
 				errorToast.setGravity(Gravity.CENTER, 0, 0);
@@ -150,40 +168,14 @@ public class FragmentForecast extends Fragment
 
 			Resources resources = FragmentForecast.this.getResources();
 
-			conditionImageView.setImageBitmap(imageBitmap);
-			conditionBitmap = imageBitmap;
-			temperatureTextView.setText(temperatureString + (char) 0x00B0 + resources.getString(R.string.temperature_unit));
-			feelsLikeTextView.setText(feelsLikeString + (char) 0x00B0 + resources.getString(R.string.temperature_unit));
-			humidityTextView.setText(humidityString + (char) 0x0025);
-			chanceOfPrecipitationTextView.setText(precipitationString + (char) 0x0025);
+			conditionImageView.setImageBitmap(image);
+			conditionBitmap = image;
+			temperatureTextView.setText(temperature + (char) 0x00B0 + resources.getString(R.string.temperature_unit));
+			feelsLikeTextView.setText(feelsLike + (char) 0x00B0 + resources.getString(R.string.temperature_unit));
+			humidityTextView.setText(humidity + (char) 0x0025);
+			chanceOfPrecipitationTextView.setText(precipitation + (char) 0x0025);
 			loadingTextView.setVisibility(View.GONE);
 			forecastView.setVisibility(View.VISIBLE);
-		}
-	};
-
-	private class WeatherLocationLoadedListener implements LocationLoadedListener
-	{
-		private String zipcodeString;
-
-		public WeatherLocationLoadedListener(String zipcodeString)
-		{
-			this.zipcodeString = zipcodeString;
-		}
-
-		@Override
-		public void onLocationLoaded(String cityString, String stateString, String countryString)
-		{
-			if (cityString == null)
-			{
-				Toast errorToast = Toast.makeText(context, context.getResources().getString(R.string.null_data_toast), Toast.LENGTH_LONG);
-				errorToast.setGravity(Gravity.CENTER, 0, 0);
-				errorToast.show();
-				return;
-			}
-			
-			locationTextView.setText(cityString + " " + stateString + ", " + zipcodeString + " " + countryString);
-
-			new TaskForecast(zipcodeString, weatherForecastListener, locationTextView.getContext()).execute();
 		}
 	}
 }

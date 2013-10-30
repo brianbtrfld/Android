@@ -2,25 +2,11 @@
 <resources>
    <string name="app_name">Weather App</string>
    <string name="add_city_dialog_bundle_key">input</string>
-   <string name="pre_zipcode_url">http://i.wxbug.net/REST/Direct/GetForecastHourly.ashx?zip=</string>
-   <string name="pre_condition_url">http://img.weather.weatherbug.com/forecast/icons/localized/500x420/en/trans/</string>
-   <string name="post_condition_url">.png</string>
-   <string name="temperature">temperature</string>
-   <string name="feels_like">feelsLike</string>
-   <string name="humidity">humidity</string>
-   <string name="chance_of_precipitation">chancePrecip</string>
-   <string name="icon">icon</string>
-   <string name="hourly_forecast">forecastHourlyList</string>
    <string name="zipcode_extra">zipcode_extra</string>
    <string name="city_dialog_preferred">Set Preferred</string>
    <string name="city_dialog_delete">Delete</string>
    <string name="city_dialog_cancel">Cancel</string>
    <string name="add_city_dialog_title">Add City</string>
-   <string name="location_url_pre_zipcode">http://i.wxbug.net/REST/Direct/GetLocation.ashx?zip=</string>
-   <string name="location">location</string>
-   <string name="city">city</string>
-   <string name="country">country</string>
-   <string name="state">state</string>
    <string name="invalid_zipcode_error">Invalid ZIP code.</string>
    <string name="zipcode_prompt">Please enter a ZIP code:</string>
    <string name="zipcode">ZIP code:&#160;</string>

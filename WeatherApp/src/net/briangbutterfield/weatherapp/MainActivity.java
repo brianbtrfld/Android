@@ -5,14 +5,14 @@ package net.briangbutterfield.weatherapp;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.briangbutterfield.weatherapp.FragmentDialogAddCity.DialogFinishedListener;
 import net.briangbutterfield.weatherapp.FragmentCityList.CitiesListChangeListener;
-import net.briangbutterfield.weatherapp.TaskLocation.LocationLoadedListener;
+import net.briangbutterfield.weatherapp.FragmentDialogAddCity.DialogFinishedListener;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -22,8 +22,7 @@ import android.widget.Toast;
 
 import com.deitel.weatherviewer.R;
 
-public class MainActivity extends Activity 
-                                   implements DialogFinishedListener
+public class MainActivity extends Activity implements DialogFinishedListener
 {
 	public static final String PREFERRED_CITY_NAME_KEY = "preferred_city_name";
 	public static final String PREFERRED_CITY_ZIPCODE_KEY = "preferred_city_zipcode";
@@ -237,31 +236,25 @@ public class MainActivity extends Activity
 		}
 		else
 		{
-			new TaskLocation(zipcodeString, this, new CityNameLocationLoadedListener(zipcodeString, preferred)).execute();
+			ForecastLocation forecastLocation = new ForecastLocation();
+			forecastLocation.new LoadLocation(new CityNameLocationLoadedListener()).execute(zipcodeString);
 		}
 	}
 
-	private class CityNameLocationLoadedListener implements LocationLoadedListener
+	private class CityNameLocationLoadedListener implements IListeners
 	{
-		private String zipcodeString;
 		private boolean preferred;
 
-		public CityNameLocationLoadedListener(String zipcodeString,	boolean preferred)
-		{
-			this.zipcodeString = zipcodeString;
-			this.preferred = preferred;
-		}
-
 		@Override
-		public void onLocationLoaded(String cityString, String stateString, String countryString)
+		public void onLocationLoaded(ForecastLocation location)
 		{
-			if (cityString != null)
+			if (location.City != null)
 			{
-				addCity(cityString, zipcodeString, !preferred);
+				addCity(location.City, location.ZipCode, !preferred);
 
 				if (preferred)
 				{
-					setPreferred(cityString);
+					setPreferred(location.City);
 				}
 			}
 			else
@@ -270,6 +263,13 @@ public class MainActivity extends Activity
 				zipcodeToast.setGravity(Gravity.CENTER, 0, 0);
 				zipcodeToast.show();
 			}
+		}
+
+		@Override
+		public void onForecastLoaded(Bitmap image, String temperature, String feelsLike, String humidity, String precipitation)
+		{
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }
