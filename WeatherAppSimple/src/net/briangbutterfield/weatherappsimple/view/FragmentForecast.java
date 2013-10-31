@@ -1,7 +1,11 @@
-package net.briangbutterfield.weatherappsimple;
+package net.briangbutterfield.weatherappsimple.view;
 
-import net.briangbutterfield.weatherappsimple.Forecast.LoadForecast;
-import net.briangbutterfield.weatherappsimple.ForecastLocation.LoadLocation;
+import net.briangbutterfield.weatherappsimple.IListeners;
+import net.briangbutterfield.weatherappsimple.R;
+import net.briangbutterfield.weatherappsimple.model.Forecast;
+import net.briangbutterfield.weatherappsimple.model.Forecast.LoadForecast;
+import net.briangbutterfield.weatherappsimple.model.ForecastLocation;
+import net.briangbutterfield.weatherappsimple.model.ForecastLocation.LoadLocation;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
@@ -153,6 +157,7 @@ public class FragmentForecast extends Fragment
 		}
 		else
 		{
+			// Restore the data and update the view.
 			_location = savedInstanceStateBundle.getParcelable(LOCATION_KEY);
 			_forecast = savedInstanceStateBundle.getParcelable(FORECAST_KEY);
 			updateView();
@@ -162,6 +167,7 @@ public class FragmentForecast extends Fragment
 	@Override
 	public void onDestroy()
 	{
+		// Determine if any of the AsyncTasks are running and cancel/end.
 		if (_loadLocation != null && _loadLocation.getStatus() == Status.RUNNING)
 		{
 			_loadLocation.cancel(true);
@@ -179,9 +185,15 @@ public class FragmentForecast extends Fragment
 
 	private void updateView()
 	{
+		// Only update the portion of the view where the
+		// data is available.
 		if (_location != null && _location.City != null)
 		{
 			_textViewLocation.setText(_location.City + " " + _location.State);
+			
+			// As soon as the location returns, display the view.
+			_progressView.setVisibility(View.GONE);
+			_forecastView.setVisibility(View.VISIBLE);
 		}
 
 		if (_forecast != null && _forecast.Temp != null)
@@ -197,9 +209,5 @@ public class FragmentForecast extends Fragment
 				_imageViewForecast.setImageBitmap(_forecast.Image);
 			}
 		}
-
-		_progressView.setVisibility(View.GONE);
-		_forecastView.setVisibility(View.VISIBLE);
-
 	}
 }

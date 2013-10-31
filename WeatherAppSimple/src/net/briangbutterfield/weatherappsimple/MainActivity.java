@@ -1,5 +1,6 @@
 package net.briangbutterfield.weatherappsimple;
 
+import net.briangbutterfield.weatherappsimple.view.FragmentForecast;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ public class MainActivity extends Activity
 		_citiesArray = getResources().getStringArray(R.array.cityArray);
 
 		// By default, first element is "favorite" city, go get location.
+		// TextUtils.split() takes a regular expression and in the case
+		// of a pipe delimiter, it needs to be escaped.
 		showForecast(TextUtils.split(_citiesArray[0], "\\|")[0]);
 	}
 

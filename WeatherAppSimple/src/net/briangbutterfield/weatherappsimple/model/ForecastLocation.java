@@ -1,10 +1,12 @@
-package net.briangbutterfield.weatherappsimple;
+package net.briangbutterfield.weatherappsimple.model;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import net.briangbutterfield.weatherappsimple.IListeners;
 
 import android.os.AsyncTask;
 import android.os.Parcel;
