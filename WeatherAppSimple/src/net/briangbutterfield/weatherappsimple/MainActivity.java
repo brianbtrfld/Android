@@ -29,18 +29,18 @@ public class MainActivity extends Activity
 	{
 		//@formatter:off
 		
-		FragmentForecast currentForecastFragment = (FragmentForecast) getFragmentManager().findFragmentById(R.id.fragmentFrameLayout);
+		FragmentForecast forecastFragment = (FragmentForecast) getFragmentManager().findFragmentById(R.id.fragmentFrameLayout);
 		
-		if (currentForecastFragment == null)
+		if (forecastFragment == null)
 		{
-			currentForecastFragment = new FragmentForecast();
+			forecastFragment = new FragmentForecast();
 			
 			Bundle bundle = new Bundle();
 			bundle.putString(FragmentForecast.LOCATION_KEY, zipCode);
-			currentForecastFragment.setArguments(bundle);
+			forecastFragment.setArguments(bundle);
 			
 			getFragmentManager().beginTransaction()
-								.replace(R.id.fragmentFrameLayout, currentForecastFragment)
+								.replace(R.id.fragmentFrameLayout, forecastFragment)
 			 					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 			 					.commit();
 		}

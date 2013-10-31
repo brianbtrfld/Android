@@ -171,7 +171,7 @@ public class Forecast implements Parcelable
 			_listener.onForecastLoaded(forecast);
 		}
 
-		private Bitmap getIconBitmap(String conditionString, int bitmapSampleSize)
+		private Bitmap readIconBitmap(String conditionString, int bitmapSampleSize)
 		{
 			Bitmap iconBitmap = null;
 			try
@@ -240,7 +240,7 @@ public class Forecast implements Parcelable
 					}
 					else if (name.equals("icon") == true)
 					{
-						forecast.Image = getIconBitmap(reader.nextString(), bitmapSampleSize);
+						forecast.Image = readIconBitmap(reader.nextString(), bitmapSampleSize);
 					}
 					else
 					{
