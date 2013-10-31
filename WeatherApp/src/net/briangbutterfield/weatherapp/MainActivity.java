@@ -20,8 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.deitel.weatherviewer.R;
-
 public class MainActivity extends Activity implements DialogFinishedListener
 {
 	public static final String PREFERRED_CITY_NAME_KEY = "preferred_city_name";

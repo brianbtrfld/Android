@@ -15,8 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.deitel.weatherviewer.R;
-
 public class FragmentForecast extends Fragment
 {
 	private String zipcodeString;

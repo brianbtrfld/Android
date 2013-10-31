@@ -14,6 +14,9 @@ import android.util.Log;
 
 public class ForecastLocation implements Parcelable
 {
+	
+	private String _URL = "http://i.wxbug.net/REST/Direct/GetLocation.ashx?zip=" + "%s" + 
+			             "&api_key=q3wj56tqghv7ybd8dy6gg4e7";
 
 	public ForecastLocation()
 	{
@@ -73,7 +76,7 @@ public class ForecastLocation implements Parcelable
 
 	public class LoadLocation extends AsyncTask<String, Void, ForecastLocation>
 	{
-		private static final String TAG = "ReadLocatonTask.java";
+		private static final String TAG = "Weather:ForecastLocation";
 
 		private IListeners _listener;
 
@@ -89,17 +92,14 @@ public class ForecastLocation implements Parcelable
 
 			try
 			{
-
-				URL url = new URL("http://i.wxbug.net/REST/Direct/GetLocation.ashx?zip=" + params[0]
-						+ "&api_key=q3wj56tqghv7ybd8dy6gg4e7");
-
-				Reader streamReader = new InputStreamReader(url.openStream());
-
-				JsonReader jsonReader = new JsonReader(streamReader);
-
-				forecastLocation = readJSON(jsonReader);
-
-				jsonReader.close();
+				if (params.length == 1 && params[0] != null)
+				{
+					URL url = new URL(String.format(_URL, params[0]));
+					Reader streamReader = new InputStreamReader(url.openStream());
+					JsonReader jsonReader = new JsonReader(streamReader);
+					forecastLocation = readJSON(jsonReader);
+					jsonReader.close();
+				}
 			}
 			catch (MalformedURLException e)
 			{
@@ -136,25 +136,23 @@ public class ForecastLocation implements Parcelable
 				{
 					jsonReader.beginObject();
 
-					String nextNameString;
-
 					while (jsonReader.hasNext())
 					{
-						nextNameString = jsonReader.nextName();
+						name = jsonReader.nextName();
 
-						if (nextNameString.equals("city") == true)
+						if (name.equals("city") == true)
 						{
 							forecastLocation.City = jsonReader.nextString();
 						}
-						else if (nextNameString.equals("state") == true)
+						else if (name.equals("state") == true)
 						{
 							forecastLocation.State = jsonReader.nextString();
 						}
-						else if (nextNameString.equals("country") == true)
+						else if (name.equals("country") == true)
 						{
 							forecastLocation.Country = jsonReader.nextString();
 						}
-						else if (nextNameString.equals("zipCode") == true)
+						else if (name.equals("zipCode") == true)
 						{
 							forecastLocation.ZipCode = jsonReader.nextString();
 						}

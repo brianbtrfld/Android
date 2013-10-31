@@ -25,9 +25,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:gravity="center"
+                android:text="@string/pendingWebCall"
                 android:textColor="@android:color/black"
-                android:textSize="27sp"
-                android:text="@string/pendingWebCall" />
+                android:textSize="27sp" />
 
             <TextView
                 android:id="@+id/labelTemp"
@@ -45,9 +45,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="3dp"
+                android:text="@string/pendingWebCall"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:text="@string/pendingWebCall" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/labelFeelsLikeTemp"
@@ -65,9 +65,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="3dp"
+                android:text="@string/pendingWebCall"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:text="@string/pendingWebCall" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/labelHumidity"
@@ -85,9 +85,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="3dp"
+                android:text="@string/pendingWebCall"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:text="@string/pendingWebCall" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/labelChanceOfPrecip"
@@ -105,9 +105,31 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="3dp"
+                android:text="@string/pendingWebCall"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+            
+            <TextView
+                android:id="@+id/labelAsOfTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/labelAsOfTime"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textViewAsOfTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/pendingWebCall"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
-                android:text="@string/pendingWebCall" />
+                android:textStyle="bold" />
+            
         </LinearLayout>
     </ScrollView>
 
@@ -131,9 +153,8 @@
             android:layout_below="@+id/progressBar"
             android:layout_centerHorizontal="true"
             android:padding="5dp"
-            android:textSize="20sp"
-            android:text="@string/progressMessage" />
-        
+            android:text="@string/progressMessage"
+            android:textSize="20sp" />
     </RelativeLayout>
 
 </FrameLayout>

@@ -3,8 +3,6 @@ package net.briangbutterfield.weatherapp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.deitel.weatherviewer.R;
-
 import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.Context;
