@@ -20,15 +20,21 @@ import android.util.Log;
 public class Forecast implements Parcelable
 {
 
+	private static final String TAG = "Weather:LoadForecast";
+	
+	//@formatter:off
+	
 	// http://developer.weatherbug.com/docs/read/WeatherBug_API_JSON
 	
 	private String _URL = "http://i.wxbug.net/REST/Direct/GetForecastHourly.ashx?zip=" + "%s" + 
-	                     "&ht=t&ht=i&ht=cp&ht=fl&ht=h" + 
-	                     "&api_key=q3wj56tqghv7ybd8dy6gg4e7";
+	                      "&ht=t&ht=i&ht=cp&ht=fl&ht=h" + 
+	                      "&api_key=q3wj56tqghv7ybd8dy6gg4e7";
 	
 	// http://developer.weatherbug.com/docs/read/List_of_Icons
 		
 	private String _imageURL = "http://img.weather.weatherbug.com/forecast/icons/localized/500x420/en/trans/%s.png";
+	
+	//@formatter:on
 
 	public Forecast()
 	{
@@ -96,7 +102,6 @@ public class Forecast implements Parcelable
 
 	public class LoadForecast extends AsyncTask<String, Void, Forecast>
 	{
-		private static final String TAG = "Weather:LoadForecast";
 		private IListeners _listener;
 		private Context _context;
 
@@ -117,19 +122,23 @@ public class Forecast implements Parcelable
 				if (params.length == 1 && params[0] != null)
 				{
 					URL webServiceURL = new URL(String.format(_URL, params[0]));
-	
-					Reader forecastReader = new InputStreamReader(webServiceURL.openStream());
-	
-					JsonReader forecastJsonReader = new JsonReader(forecastReader);
-	
-					forecastJsonReader.beginObject();
-	
-					if (forecastJsonReader.nextName().equals("forecastHourlyList") == true)
+
+					// Open stream and assign to JsonReader.
+					// NOTE:  This is a "bulk" read, not buffered.
+					Reader streamReader = new InputStreamReader(webServiceURL.openStream());
+					JsonReader jsonReader = new JsonReader(streamReader);
+
+					// Consume first token.
+					jsonReader.beginObject();
+
+					if (jsonReader.nextName().equals("forecastHourlyList") == true)
 					{
-						forecast = readJSON(forecastJsonReader);
+						forecast = readJSON(jsonReader);
 					}
-	
-					forecastJsonReader.close();
+
+					// Always close a stream.
+					jsonReader.close();
+					streamReader.close();
 				}
 
 			}
@@ -195,14 +204,16 @@ public class Forecast implements Parcelable
 
 			try
 			{
-				// First entry in forecast array.
+				// Consume first array token.
 				reader.beginArray();
-				reader.beginObject();
 				
+				// Consume first token in first entry of array.
+				reader.beginObject();
+
 				while (reader.hasNext())
 				{
 					String name = reader.nextName();
-					
+
 					if (name.equals("temperature") == true)
 					{
 						forecast.Temp = reader.nextString();
@@ -257,6 +268,7 @@ public class Forecast implements Parcelable
 		}
 		catch (IOException e)
 		{
+			Log.e(TAG, e.toString());
 		}
 		finally
 		{

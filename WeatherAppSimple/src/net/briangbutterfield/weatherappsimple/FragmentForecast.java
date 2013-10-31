@@ -36,6 +36,8 @@ public class FragmentForecast extends Fragment
 
 	private class AsynTaskListener implements IListeners
 	{
+		// Provides implementation for the callbacks from the
+		// associated AsyncTask.
 		@Override
 		public void onLocationLoaded(ForecastLocation location)
 		{
@@ -78,10 +80,6 @@ public class FragmentForecast extends Fragment
 		}
 	}
 
-	public FragmentForecast()
-	{
-	}
-
 	@Override
 	public void onCreate(Bundle argumentsBundle)
 	{
@@ -92,7 +90,10 @@ public class FragmentForecast extends Fragment
 			_location = new ForecastLocation();
 		}
 		_loadLocation = _location.new LoadLocation(new AsynTaskListener());
-		//_loadLocation.execute(getArguments().getString(LOCATION_KEY));
+		
+		// Using executeOnExecutor allows for the AsyncTask(s) to execute in parallel
+		// still keeping with the AsyncTask thread pool limit.
+		//			_loadLocation.execute(getArguments().getString(LOCATION_KEY));
 		_loadLocation.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getArguments().getString(LOCATION_KEY));
 		
 		if (_forecast == null)
@@ -101,7 +102,10 @@ public class FragmentForecast extends Fragment
 		}
 		
 		_loadForecast = _forecast.new LoadForecast(getActivity(), new AsynTaskListener());
-		//_loadForecast.execute(getArguments().getString(LOCATION_KEY));
+		
+		// Using executeOnExecutor allows for the AsyncTask(s) to execute in parallel
+		// still keeping with the AsyncTask thread pool limit.
+		//			_loadForecast.execute(getArguments().getString(LOCATION_KEY));
 		_loadForecast.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getArguments().getString(LOCATION_KEY));
 	}
 
@@ -110,6 +114,7 @@ public class FragmentForecast extends Fragment
 	{
 		super.onSaveInstanceState(savedInstanceStateBundle);
 
+		// Pull the parcelables out of the bundle.
 		if (_location != null && _forecast != null)
 		{
 			savedInstanceStateBundle.putParcelable(LOCATION_KEY, _location);

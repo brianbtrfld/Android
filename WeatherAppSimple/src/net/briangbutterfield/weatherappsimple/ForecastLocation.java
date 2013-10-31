@@ -14,9 +14,14 @@ import android.util.Log;
 
 public class ForecastLocation implements Parcelable
 {
+
+	private static final String TAG = "Weather:ForecastLocation";
 	
+	//@formatter:off
 	private String _URL = "http://i.wxbug.net/REST/Direct/GetLocation.ashx?zip=" + "%s" + 
 			             "&api_key=q3wj56tqghv7ybd8dy6gg4e7";
+	
+	//@formatter:on
 
 	public ForecastLocation()
 	{
@@ -76,8 +81,6 @@ public class ForecastLocation implements Parcelable
 
 	public class LoadLocation extends AsyncTask<String, Void, ForecastLocation>
 	{
-		private static final String TAG = "Weather:ForecastLocation";
-
 		private IListeners _listener;
 
 		public LoadLocation(IListeners listener)
@@ -94,11 +97,21 @@ public class ForecastLocation implements Parcelable
 			{
 				if (params.length == 1 && params[0] != null)
 				{
+					// Since there is a zip code passed to the task, build
+					// the URL.
 					URL url = new URL(String.format(_URL, params[0]));
+					
+					// Open stream and assign to JsonReader.
+					// NOTE:  This is a "bulk" read, not buffered.
 					Reader streamReader = new InputStreamReader(url.openStream());
 					JsonReader jsonReader = new JsonReader(streamReader);
+					
+					// Parse the JSON-based stream.
 					forecastLocation = readJSON(jsonReader);
+					
+					// Always close a stream.
 					jsonReader.close();
+					streamReader.close();
 				}
 			}
 			catch (MalformedURLException e)
