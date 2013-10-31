@@ -70,11 +70,13 @@ public class ForecastLocation implements Parcelable
 
 	public static final Parcelable.Creator<ForecastLocation> Creator = new Parcelable.Creator<ForecastLocation>()
 	{
+		@Override
 		public ForecastLocation createFromParcel(Parcel pc)
 		{
 			return new ForecastLocation(pc);
 		}
 
+		@Override
 		public ForecastLocation[] newArray(int size)
 		{
 			return new ForecastLocation[size];

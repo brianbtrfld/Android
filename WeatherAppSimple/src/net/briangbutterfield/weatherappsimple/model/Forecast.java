@@ -91,11 +91,13 @@ public class Forecast implements Parcelable
 
 	public static final Parcelable.Creator<Forecast> Creator = new Parcelable.Creator<Forecast>()
 	{
+		@Override
 		public Forecast createFromParcel(Parcel pc)
 		{
 			return new Forecast(pc);
 		}
-
+		
+		@Override
 		public Forecast[] newArray(int size)
 		{
 			return new Forecast[size];
