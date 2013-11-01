@@ -20,11 +20,9 @@ import android.widget.Toast;
 public class FragmentForecast extends Fragment
 {
 	public static final String LOCATION_KEY = "key_location";
-	public static final String FORECAST_KEY = "key_forecast";
 
 	private ForecastLocation _location = null;
 	private LoadLocation _loadLocation = null;
-	private Forecast _forecast = null;
 	private LoadForecast _loadForecast = null;
 
 	private View _forecastView;
@@ -66,9 +64,9 @@ public class FragmentForecast extends Fragment
 		@Override
 		public void onForecastLoaded(Forecast forecast)
 		{
-			_forecast = forecast;
+			_location.CurrentForecast = forecast;
 	
-			if (_forecast == null)
+			if (forecast == null)
 			{
 				Toast.makeText(getActivity(),
 							   getResources().getString(R.string.toastNullData),
@@ -100,12 +98,8 @@ public class FragmentForecast extends Fragment
 		//			_loadLocation.execute(getArguments().getString(LOCATION_KEY));
 		_loadLocation.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getArguments().getString(LOCATION_KEY));
 		
-		if (_forecast == null)
-		{
-			_forecast = new Forecast();
-		}
-		
-		_loadForecast = _forecast.new LoadForecast(getActivity(), new AsynTaskListener());
+
+		_loadForecast = new Forecast().new LoadForecast(getActivity(), new AsynTaskListener());
 		
 		// Using executeOnExecutor allows for the AsyncTask(s) to execute in parallel
 		// still keeping with the AsyncTask thread pool limit.
@@ -119,10 +113,9 @@ public class FragmentForecast extends Fragment
 		super.onSaveInstanceState(savedInstanceStateBundle);
 
 		// Pull the parcelables out of the bundle.
-		if (_location != null && _forecast != null)
+		if (_location != null)
 		{
 			savedInstanceStateBundle.putParcelable(LOCATION_KEY, _location);
-			savedInstanceStateBundle.putParcelable(FORECAST_KEY, _forecast);
 		}
 	}
 
@@ -159,7 +152,6 @@ public class FragmentForecast extends Fragment
 		{
 			// Restore the data and update the view.
 			_location = savedInstanceStateBundle.getParcelable(LOCATION_KEY);
-			_forecast = savedInstanceStateBundle.getParcelable(FORECAST_KEY);
 			updateView();
 		}
 	}
@@ -196,17 +188,17 @@ public class FragmentForecast extends Fragment
 			_forecastView.setVisibility(View.VISIBLE);
 		}
 
-		if (_forecast != null && _forecast.Temp != null)
+		if (_location.CurrentForecast != null && _location.CurrentForecast.Temp != null)
 		{
-			_textViewTemp.setText(_forecast.Temp + (char) 0x00B0 + "F");
-			_textViewFeelsLike.setText(_forecast.FeelsLikeTemp + (char) 0x00B0 + "F");
-			_textViewHumidity.setText(_forecast.Humidity + (char) 0x0025);
-			_textViewChanceOfPrecip.setText(_forecast.ChanceOfPrecipitation + (char) 0x0025);
-			_textViewAsOfTime.setText(_forecast.AsOfTime);
+			_textViewTemp.setText(_location.CurrentForecast.Temp + (char) 0x00B0 + "F");
+			_textViewFeelsLike.setText(_location.CurrentForecast.FeelsLikeTemp + (char) 0x00B0 + "F");
+			_textViewHumidity.setText(_location.CurrentForecast.Humidity + (char) 0x0025);
+			_textViewChanceOfPrecip.setText(_location.CurrentForecast.ChanceOfPrecipitation + (char) 0x0025);
+			_textViewAsOfTime.setText(_location.CurrentForecast.AsOfTime);
 
-			if (_forecast.Image != null)
+			if (_location.CurrentForecast.Image != null)
 			{
-				_imageViewForecast.setImageBitmap(_forecast.Image);
+				_imageViewForecast.setImageBitmap(_location.CurrentForecast.Image);
 			}
 		}
 	}
