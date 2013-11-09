@@ -1,6 +1,5 @@
 package net.briangbutterfield.weatherapp;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -10,12 +9,10 @@ import java.net.URL;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.JsonReader;
 import android.util.Log;
 
-public class Forecast implements Parcelable
+public class Forecast
 {
 
 	// http://developer.weatherbug.com/docs/read/WeatherBug_API_JSON
@@ -29,52 +26,11 @@ public class Forecast implements Parcelable
 		Image = null;
 	}
 
-	public Forecast(Parcel parcel)
-	{
-		Temp = parcel.readString();
-		FeelsLikeTemp = parcel.readString();
-		Humidity = parcel.readString();
-		ChanceOfPrecipitation = parcel.readString();
-
-		byte[] data = null;
-		parcel.readByteArray(data);
-		Image = convertByteArrayToBitmap(data);
-	}
-
 	public String Temp;
 	public String FeelsLikeTemp;
 	public String Humidity;
 	public String ChanceOfPrecipitation;
 	public Bitmap Image;
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeString(Temp);
-		dest.writeString(FeelsLikeTemp);
-		dest.writeString(Humidity);
-		dest.writeString(ChanceOfPrecipitation);
-		dest.writeByteArray(convertBitmapToByteArray(Image));
-	}
-
-	public static final Parcelable.Creator<Forecast> Creator = new Parcelable.Creator<Forecast>()
-	{
-		public Forecast createFromParcel(Parcel pc)
-		{
-			return new Forecast(pc);
-		}
-
-		public Forecast[] newArray(int size)
-		{
-			return new Forecast[size];
-		}
-	};
 
 	public class LoadForecast extends AsyncTask<String, Void, Forecast>
 	{
@@ -225,33 +181,4 @@ public class Forecast implements Parcelable
 			return forecast;
 		}
 	}
-
-	private byte[] convertBitmapToByteArray(Bitmap image)
-	{
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-		byte[] byteArray = stream.toByteArray();
-
-		try
-		{
-			stream.close();
-		}
-		catch (IOException e)
-		{
-		}
-		finally
-		{
-			stream = null;
-			byteArray = null;
-		}
-
-		return byteArray;
-	}
-
-	private Bitmap convertByteArrayToBitmap(byte[] data)
-	{
-		Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-		return bitmap;
-	}
-
 }

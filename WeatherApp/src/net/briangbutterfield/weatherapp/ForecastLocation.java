@@ -7,12 +7,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.os.AsyncTask;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.JsonReader;
 import android.util.Log;
 
-public class ForecastLocation implements Parcelable
+public class ForecastLocation
 {
 
 	public ForecastLocation()
@@ -24,52 +22,11 @@ public class ForecastLocation implements Parcelable
 		CurrentForecast = null;
 	}
 
-	public ForecastLocation(Parcel parcel)
-	{
-		ZipCode = parcel.readString();
-		City = parcel.readString();
-		State = parcel.readString();
-		Country = parcel.readString();
-		CurrentForecast = parcel.readParcelable(null);
-	}
-
 	public String ZipCode;
 	public String City;
 	public String State;
 	public String Country;
 	public Forecast CurrentForecast;
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-
-		dest.writeString(ZipCode);
-		dest.writeString(City);
-		dest.writeString(State);
-		dest.writeString(Country);
-
-		dest.writeParcelable(CurrentForecast, 0);
-
-	}
-
-	public static final Parcelable.Creator<ForecastLocation> Creator = new Parcelable.Creator<ForecastLocation>()
-	{
-		public ForecastLocation createFromParcel(Parcel pc)
-		{
-			return new ForecastLocation(pc);
-		}
-
-		public ForecastLocation[] newArray(int size)
-		{
-			return new ForecastLocation[size];
-		}
-	};
 
 	public class LoadLocation extends AsyncTask<String, Void, ForecastLocation>
 	{
