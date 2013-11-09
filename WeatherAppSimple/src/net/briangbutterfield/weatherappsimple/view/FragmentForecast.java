@@ -20,9 +20,11 @@ import android.widget.Toast;
 public class FragmentForecast extends Fragment
 {
 	public static final String LOCATION_KEY = "key_location";
+	public static final String FORECAST_KEY = "key_forecast";
 
 	private ForecastLocation _location = null;
 	private LoadLocation _loadLocation = null;
+	private Forecast _forecast = null;
 	private LoadForecast _loadForecast = null;
 
 	private View _forecastView;
@@ -64,7 +66,7 @@ public class FragmentForecast extends Fragment
 		@Override
 		public void onForecastLoaded(Forecast forecast)
 		{
-			_location.CurrentForecast = forecast;
+			_forecast = forecast;
 	
 			if (forecast == null)
 			{
@@ -83,28 +85,72 @@ public class FragmentForecast extends Fragment
 	}
 
 	@Override
-	public void onCreate(Bundle argumentsBundle)
+	public void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(argumentsBundle);
-
-		if (_location == null)
-		{
+		super.onCreate(savedInstanceState);
+		
+		if (savedInstanceState == null)
+		{	
 			_location = new ForecastLocation();
+			_loadLocation = _location.new LoadLocation(new AsynTaskListener());
+		
+			// Using executeOnExecutor allows for the AsyncTask(s) to execute in parallel
+			// still keeping with the AsyncTask thread pool limit.
+			//			_loadLocation.execute(getArguments().getString(LOCATION_KEY));
+			_loadLocation.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getArguments().getString(LOCATION_KEY));
+			
+			_forecast = new Forecast();
+			_loadForecast = new Forecast().new LoadForecast(getActivity(), new AsynTaskListener());
+			
+			// Using executeOnExecutor allows for the AsyncTask(s) to execute in parallel
+			// still keeping with the AsyncTask thread pool limit.
+			//			_loadForecast.execute(getArguments().getString(LOCATION_KEY));
+			_loadForecast.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getArguments().getString(LOCATION_KEY));
 		}
-		_loadLocation = _location.new LoadLocation(new AsynTaskListener());
-		
-		// Using executeOnExecutor allows for the AsyncTask(s) to execute in parallel
-		// still keeping with the AsyncTask thread pool limit.
-		//			_loadLocation.execute(getArguments().getString(LOCATION_KEY));
-		_loadLocation.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getArguments().getString(LOCATION_KEY));
-		
+		else
+		{
+			_location = savedInstanceState.getParcelable(LOCATION_KEY);
+			_forecast = savedInstanceState.getParcelable(FORECAST_KEY);
+		}
+	}
 
-		_loadForecast = new Forecast().new LoadForecast(getActivity(), new AsynTaskListener());
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		View rootView = inflater.inflate(R.layout.fragment_forecast, null);
+	
+		_forecastView = rootView.findViewById(R.id.scrollView);
+		_progressView = rootView.findViewById(R.id.layoutProgress);
+	
+		_textViewLocation = (TextView) rootView.findViewById(R.id.textViewLocation);
+		_textViewTemp = (TextView) rootView.findViewById(R.id.textViewTemp);
+		_textViewFeelsLike = (TextView) rootView.findViewById(R.id.textViewFeelsLikeTemp);
+		_textViewHumidity = (TextView) rootView.findViewById(R.id.textViewHumidity);
+		_textViewChanceOfPrecip = (TextView) rootView.findViewById(R.id.textViewChanceOfPrecip);
+		_textViewAsOfTime = (TextView) rootView.findViewById(R.id.textViewAsOfTime);
+		_imageViewForecast = (ImageView) rootView.findViewById(R.id.imageForecast);
+	
+		return rootView;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
 		
-		// Using executeOnExecutor allows for the AsyncTask(s) to execute in parallel
-		// still keeping with the AsyncTask thread pool limit.
-		//			_loadForecast.execute(getArguments().getString(LOCATION_KEY));
-		_loadForecast.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getArguments().getString(LOCATION_KEY));
+		if (savedInstanceState == null)
+		{
+			_forecastView.setVisibility(View.GONE);
+			_progressView.setVisibility(View.VISIBLE);
+		}
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		updateView();
 	}
 
 	@Override
@@ -117,42 +163,10 @@ public class FragmentForecast extends Fragment
 		{
 			savedInstanceStateBundle.putParcelable(LOCATION_KEY, _location);
 		}
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-	{
-		View rootView = inflater.inflate(R.layout.fragment_forecast, null);
-
-		_forecastView = rootView.findViewById(R.id.scrollView);
-		_progressView = rootView.findViewById(R.id.layoutProgress);
-
-		_textViewLocation = (TextView) rootView.findViewById(R.id.textViewLocation);
-		_textViewTemp = (TextView) rootView.findViewById(R.id.textViewTemp);
-		_textViewFeelsLike = (TextView) rootView.findViewById(R.id.textViewFeelsLikeTemp);
-		_textViewHumidity = (TextView) rootView.findViewById(R.id.textViewHumidity);
-		_textViewChanceOfPrecip = (TextView) rootView.findViewById(R.id.textViewChanceOfPrecip);
-		_textViewAsOfTime = (TextView) rootView.findViewById(R.id.textViewAsOfTime);
-		_imageViewForecast = (ImageView) rootView.findViewById(R.id.imageForecast);
-
-		return rootView;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceStateBundle)
-	{
-		super.onActivityCreated(savedInstanceStateBundle);
-
-		if (savedInstanceStateBundle == null)
+		
+		if (_forecast != null)
 		{
-			_forecastView.setVisibility(View.GONE);
-			_progressView.setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			// Restore the data and update the view.
-			_location = savedInstanceStateBundle.getParcelable(LOCATION_KEY);
-			updateView();
+			savedInstanceStateBundle.putParcelable(FORECAST_KEY, _forecast);
 		}
 	}
 
@@ -188,17 +202,17 @@ public class FragmentForecast extends Fragment
 			_forecastView.setVisibility(View.VISIBLE);
 		}
 
-		if (_location.CurrentForecast != null && _location.CurrentForecast.Temp != null)
+		if (_forecast.Temp != null)
 		{
-			_textViewTemp.setText(_location.CurrentForecast.Temp + (char) 0x00B0 + "F");
-			_textViewFeelsLike.setText(_location.CurrentForecast.FeelsLikeTemp + (char) 0x00B0 + "F");
-			_textViewHumidity.setText(_location.CurrentForecast.Humidity + (char) 0x0025);
-			_textViewChanceOfPrecip.setText(_location.CurrentForecast.ChanceOfPrecipitation + (char) 0x0025);
-			_textViewAsOfTime.setText(_location.CurrentForecast.AsOfTime);
+			_textViewTemp.setText(_forecast.Temp + (char) 0x00B0 + "F");
+			_textViewFeelsLike.setText(_forecast.FeelsLikeTemp + (char) 0x00B0 + "F");
+			_textViewHumidity.setText(_forecast.Humidity + (char) 0x0025);
+			_textViewChanceOfPrecip.setText(_forecast.ChanceOfPrecipitation + (char) 0x0025);
+			_textViewAsOfTime.setText(_forecast.AsOfTime);
 
-			if (_location.CurrentForecast.Image != null)
+			if (_forecast.Image != null)
 			{
-				_imageViewForecast.setImageBitmap(_location.CurrentForecast.Image);
+				_imageViewForecast.setImageBitmap(_forecast.Image);
 			}
 		}
 	}

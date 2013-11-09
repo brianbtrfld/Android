@@ -1,6 +1,5 @@
 package net.briangbutterfield.weatherappsimple.model;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -8,7 +7,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import net.briangbutterfield.weatherappsimple.IListeners;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,38 +36,35 @@ public class Forecast implements Parcelable
 	
 	//@formatter:on
 
+	public String Temp;
+	public String FeelsLikeTemp;
+	public String Humidity;
+	public String ChanceOfPrecipitation;
+	public String AsOfTime;
+	public Bitmap Image;
+	
 	public Forecast()
 	{
 		Temp = null;
 		FeelsLikeTemp = null;
 		Humidity = null;
 		ChanceOfPrecipitation = null;
-		TempUnit = null;
-		AsOfTime = null;
 		Image = null;
 	}
 
-	public Forecast(Parcel parcel)
+	private Forecast(Parcel parcel)
 	{
 		Temp = parcel.readString();
 		FeelsLikeTemp = parcel.readString();
 		Humidity = parcel.readString();
 		ChanceOfPrecipitation = parcel.readString();
-		TempUnit = parcel.readString();
 		AsOfTime = parcel.readString();
-
-		byte[] data = null;
-		parcel.readByteArray(data);
-		Image = convertByteArrayToBitmap(data);
+		Image = parcel.readParcelable(Bitmap.class.getClassLoader());
+		
+//		byte[] data = null;
+//		parcel.readByteArray(data);
+//		Image = convertByteArrayToBitmap(data);
 	}
-
-	public String Temp;
-	public String FeelsLikeTemp;
-	public String Humidity;
-	public String ChanceOfPrecipitation;
-	public String TempUnit;
-	public String AsOfTime;
-	public Bitmap Image;
 
 	@Override
 	public int describeContents()
@@ -84,9 +79,10 @@ public class Forecast implements Parcelable
 		dest.writeString(FeelsLikeTemp);
 		dest.writeString(Humidity);
 		dest.writeString(ChanceOfPrecipitation);
-		dest.writeString(TempUnit);
 		dest.writeString(AsOfTime);
-		dest.writeByteArray(convertBitmapToByteArray(Image));
+		dest.writeParcelable(Image, 0);
+		
+//		dest.writeByteArray(convertBitmapToByteArray(Image));
 	}
 
 	public static final Parcelable.Creator<Forecast> Creator = new Parcelable.Creator<Forecast>()
@@ -260,33 +256,32 @@ public class Forecast implements Parcelable
 		}
 	}
 
-	private byte[] convertBitmapToByteArray(Bitmap image)
-	{
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-		byte[] byteArray = stream.toByteArray();
-
-		try
-		{
-			stream.close();
-		}
-		catch (IOException e)
-		{
-			Log.e(TAG, e.toString());
-		}
-		finally
-		{
-			stream = null;
-			byteArray = null;
-		}
-
-		return byteArray;
-	}
-
-	private Bitmap convertByteArrayToBitmap(byte[] data)
-	{
-		Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-		return bitmap;
-	}
-
+//	private byte[] convertBitmapToByteArray(Bitmap image)
+//	{
+//		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//		image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//		byte[] byteArray = stream.toByteArray();
+//
+//		try
+//		{
+//			stream.close();
+//		}
+//		catch (IOException e)
+//		{
+//			Log.e(TAG, e.toString());
+//		}
+//		finally
+//		{
+//			stream = null;
+//			byteArray = null;
+//		}
+//
+//		return byteArray;
+//	}
+//
+//	private Bitmap convertByteArrayToBitmap(byte[] data)
+//	{
+//		Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+//		return bitmap;
+//	}
 }

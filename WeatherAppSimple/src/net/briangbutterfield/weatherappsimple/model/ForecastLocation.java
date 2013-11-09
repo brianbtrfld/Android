@@ -39,23 +39,20 @@ public class ForecastLocation implements Parcelable
 		City = null;
 		State = null;
 		Country = null;
-		CurrentForecast = null;
 	}
 
-	public ForecastLocation(Parcel parcel)
+	private ForecastLocation(Parcel parcel)
 	{
 		ZipCode = parcel.readString();
 		City = parcel.readString();
 		State = parcel.readString();
 		Country = parcel.readString();
-		CurrentForecast = parcel.readParcelable(null);
 	}
 
 	public String ZipCode;
 	public String City;
 	public String State;
 	public String Country;
-	public Forecast CurrentForecast;
 
 	@Override
 	public int describeContents()
@@ -66,14 +63,10 @@ public class ForecastLocation implements Parcelable
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
 	{
-
 		dest.writeString(ZipCode);
 		dest.writeString(City);
 		dest.writeString(State);
 		dest.writeString(Country);
-
-		dest.writeParcelable(CurrentForecast, 0);
-
 	}
 
 	public static final Parcelable.Creator<ForecastLocation> Creator = new Parcelable.Creator<ForecastLocation>()
