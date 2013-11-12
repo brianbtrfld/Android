@@ -46,11 +46,13 @@ Thumbs.db
 .metadata/
 
 # Android Studio and Build Artifacts #
+# http://devnet.jetbrains.com/docs/DOC-1186
 ###############################
 build/
 .gradle/
-.idea/
 local.properties
+*/.idea/workspace.xml
+*/.idea/tasks.xml
 
 # Android Files #
 #################
