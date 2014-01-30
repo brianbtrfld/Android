@@ -78,6 +78,34 @@ public class MainActivity extends Activity implements DialogFinishedListener
 		loadSelectedForecast();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+	
+		inflater.inflate(R.menu.menu_main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() == R.id.add_city_item)
+		{
+			showAddCityDialog();
+			return true;
+		}
+	
+		return false; 
+	}
+
+	@Override
+	public void onDialogFinished(String zipcodeString, boolean preferred)
+	{
+		getCityNameFromZipcode(zipcodeString, preferred);
+	}
+
 	private CitiesListChangeListener citiesListChangeListener =
 			new CitiesListChangeListener()
 			{
@@ -94,19 +122,6 @@ public class MainActivity extends Activity implements DialogFinishedListener
 				}
 			};
 
-	private void loadSelectedForecast()
-	{
-		if (lastSelectedCity != null)
-		{
-			selectForecast(lastSelectedCity);
-		} 
-		else
-		{
-			String cityNameString = weatherSharedPreferences.getString(PREFERRED_CITY_NAME_KEY, getResources().getString(R.string.default_zipcode));
-			selectForecast(cityNameString); 
-		}
-	}
-
 	public void setPreferred(String cityNameString)
 	{
 		String cityZipcodeString = favoriteCitiesMap.get(cityNameString);
@@ -119,35 +134,6 @@ public class MainActivity extends Activity implements DialogFinishedListener
 		lastSelectedCity = null;
 		loadSelectedForecast();
 
-	}
-
-	private void loadSavedCities()
-	{
-		Map<String, ?> citiesMap = weatherSharedPreferences.getAll();
-
-		for (String cityString : citiesMap.keySet())
-		{
-			if (!(cityString.equals(PREFERRED_CITY_NAME_KEY) || cityString.equals(PREFERRED_CITY_ZIPCODE_KEY)))
-			{
-				addCity(cityString, (String) citiesMap.get(cityString), false);
-			}
-		}
-	}
-
-	private void addSampleCities()
-	{
-		String[] sampleCityNamesArray = getResources().getStringArray(R.array.default_city_names);
-		String[] sampleCityZipcodesArray = getResources().getStringArray(R.array.default_city_zipcodes);
-
-		for (int i = 0; i < sampleCityNamesArray.length; i++)
-		{
-			if (i == 0)
-			{
-				setPreferred(sampleCityNamesArray[i]);
-			}
-
-			addCity(sampleCityNamesArray[i], sampleCityZipcodesArray[i], false);
-		}
 	}
 
 	public void addCity(String city, String zipcode, boolean select)
@@ -185,26 +171,46 @@ public class MainActivity extends Activity implements DialogFinishedListener
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	private void addSampleCities()
 	{
-		super.onCreateOptionsMenu(menu);
-		MenuInflater inflater = getMenuInflater();
-
-		inflater.inflate(R.menu.menu_main, menu);
-		return true;
+		String[] sampleCityNamesArray = getResources().getStringArray(R.array.default_city_names);
+		String[] sampleCityZipcodesArray = getResources().getStringArray(R.array.default_city_zipcodes);
+	
+		for (int i = 0; i < sampleCityNamesArray.length; i++)
+		{
+			if (i == 0)
+			{
+				setPreferred(sampleCityNamesArray[i]);
+			}
+	
+			addCity(sampleCityNamesArray[i], sampleCityZipcodesArray[i], false);
+		}
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
+	private void loadSavedCities()
 	{
-		if (item.getItemId() == R.id.add_city_item)
+		Map<String, ?> citiesMap = weatherSharedPreferences.getAll();
+	
+		for (String cityString : citiesMap.keySet())
 		{
-			showAddCityDialog();
-			return true;
+			if (!(cityString.equals(PREFERRED_CITY_NAME_KEY) || cityString.equals(PREFERRED_CITY_ZIPCODE_KEY)))
+			{
+				addCity(cityString, (String) citiesMap.get(cityString), false);
+			}
 		}
+	}
 
-		return false; 
+	private void loadSelectedForecast()
+	{
+		if (lastSelectedCity != null)
+		{
+			selectForecast(lastSelectedCity);
+		} 
+		else
+		{
+			String cityNameString = weatherSharedPreferences.getString(PREFERRED_CITY_NAME_KEY, getResources().getString(R.string.default_zipcode));
+			selectForecast(cityNameString); 
+		}
 	}
 
 	private void showAddCityDialog()
@@ -216,12 +222,6 @@ public class MainActivity extends Activity implements DialogFinishedListener
 		FragmentTransaction addCityFragmentTransition = thisFragmentManager.beginTransaction();
 
 		newAddCityDialogFragment.show(addCityFragmentTransition, "");
-	}
-
-	@Override
-	public void onDialogFinished(String zipcodeString, boolean preferred)
-	{
-		getCityNameFromZipcode(zipcodeString, preferred);
 	}
 
 	private void getCityNameFromZipcode(String zipcodeString, boolean preferred)
